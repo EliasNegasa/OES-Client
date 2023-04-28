@@ -153,6 +153,4 @@ function Layout() {
   );
 }
 
-export default function Dashboard() {
-  return <Layout />;
-}
+export default Layout;

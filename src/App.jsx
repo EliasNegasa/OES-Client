@@ -1,8 +1,13 @@
-import { Route, Routes } from "react-router-dom";
+import { Navigate, Route, Routes } from "react-router-dom";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import CourseList from "./components/courses/CoursesList";
 import UserList from "./components/users/UsersList";
 import Layout from "./components/Layout";
+import ExamsList from "./components/exams/ExamsList";
+import QuestionsList from "./components/questions/QuestionsList";
+import AnswersList from "./components/answers/AnswersList";
+import ResultsList from "./components/results/ResultsList";
+import Dashboard from "./components/dashboard.jsx/dashboard";
 
 const theme = createTheme({
   typography: {
@@ -33,9 +38,14 @@ function App() {
       <>
         <Routes>
           <Route element={<Layout />}>
-            {/* <Route index element={<Dashboard />} /> */}
+            <Route path="/" element={<Dashboard />} />
+            <Route path="/dashboard" element={<Navigate to="/" />} />
             <Route path="/courses" element={<CourseList />} />
             <Route path="/users" element={<UserList />} />
+            <Route path="/exams" element={<ExamsList />} />
+            <Route path="/questions" element={<QuestionsList />} />
+            <Route path="/answers" element={<AnswersList />} />
+            <Route path="/results" element={<ResultsList />} />
           </Route>
         </Routes>
       </>

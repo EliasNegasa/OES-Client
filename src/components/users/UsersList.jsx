@@ -10,6 +10,7 @@ import { Stack, Typography } from "@mui/material";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
+import _ from "lodash";
 
 export default function UsersList() {
   return (
@@ -44,7 +45,9 @@ export default function UsersList() {
 
                 <TableCell>
                   {user.roles &&
-                    user.roles.map((role) => <span>{role.role_name}</span>)}
+                    user.roles.map((role) => (
+                      <span>{_.capitalize(role.role_name)}</span>
+                    ))}
                 </TableCell>
                 <TableCell>
                   <Stack direction="row">

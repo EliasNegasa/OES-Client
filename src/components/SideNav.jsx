@@ -9,6 +9,7 @@ import QuizIcon from "@mui/icons-material/Quiz";
 import DescriptionIcon from "@mui/icons-material/Description";
 import QuestionAnswerIcon from "@mui/icons-material/QuestionAnswer";
 import CreditScoreIcon from "@mui/icons-material/CreditScore";
+import DashboardIcon from "@mui/icons-material/Dashboard";
 import { NavLink } from "react-router-dom";
 import { useTheme } from "@emotion/react";
 
@@ -18,37 +19,44 @@ const SideNav = () => {
   return (
     <>
       <List>
-        {["Users", "Courses", "Exams", "Questions", "Answers", "Results"].map(
-          (text) => (
-            <NavLink to={text.toLowerCase()}>
-              <ListItem key={text} disablePadding sx={{ display: "block" }}>
-                <ListItemButton
+        {[
+          "Dashboard",
+          "Users",
+          "Courses",
+          "Exams",
+          "Questions",
+          "Answers",
+          "Results",
+        ].map((text) => (
+          <NavLink to={text.toLowerCase()}>
+            <ListItem key={text} disablePadding sx={{ display: "block" }}>
+              <ListItemButton
+                sx={{
+                  minHeight: 48,
+                  px: 2.9,
+                }}
+              >
+                <ListItemIcon
                   sx={{
-                    minHeight: 48,
-                    px: 2.9,
+                    minWidth: 0,
+                    mr: open ? 3 : "auto",
+                    justifyContent: "center",
+                    color: "#8a9199",
                   }}
                 >
-                  <ListItemIcon
-                    sx={{
-                      minWidth: 0,
-                      mr: open ? 3 : "auto",
-                      justifyContent: "center",
-                      color: "#8a9199",
-                    }}
-                  >
-                    {text == "Users" && <PeopleOutlineIcon />}
-                    {text == "Courses" && <AutoStoriesIcon />}
-                    {text == "Exams" && <DescriptionIcon />}
-                    {text == "Questions" && <QuizIcon />}
-                    {text == "Answers" && <QuestionAnswerIcon />}
-                    {text == "Results" && <CreditScoreIcon />}
-                  </ListItemIcon>
-                  <ListItemText primary={text} sx={{ color: "#8a9199" }} />
-                </ListItemButton>
-              </ListItem>
-            </NavLink>
-          )
-        )}
+                  {text == "Dashboard" && <DashboardIcon />}
+                  {text == "Users" && <PeopleOutlineIcon />}
+                  {text == "Courses" && <AutoStoriesIcon />}
+                  {text == "Exams" && <DescriptionIcon />}
+                  {text == "Questions" && <QuizIcon />}
+                  {text == "Answers" && <QuestionAnswerIcon />}
+                  {text == "Results" && <CreditScoreIcon />}
+                </ListItemIcon>
+                <ListItemText primary={text} sx={{ color: "#8a9199" }} />
+              </ListItemButton>
+            </ListItem>
+          </NavLink>
+        ))}
       </List>
     </>
   );
