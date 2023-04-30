@@ -6,18 +6,39 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
-import { Stack, Typography } from "@mui/material";
+import { Stack, Typography, Button } from "@mui/material";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
+import PersonAddAltIcon from "@mui/icons-material/PersonAddAlt";
 import _ from "lodash";
+import CreateUser from "./UserForm";
+import Popup from "../Popup";
 
 export default function UsersList() {
+  const [openPopup, setOpenPopup] = React.useState(false);
+
   return (
     <>
-      <Typography variant="h5" sx={{ fontWeight: 700, mb: 2 }}>
-        Users
-      </Typography>
+      <Stack spacing={2} direction="row" sx={{ mb: 2 }}>
+        <Typography variant="h5" sx={{ fontWeight: 700, flexGrow: 1 }}>
+          Users
+        </Typography>
+        <Button
+          variant="contained"
+          onClick={() => setOpenPopup(true)}
+          startIcon={<PersonAddAltIcon />}
+        >
+          Create User
+        </Button>
+      </Stack>
+      <Popup
+        openPopup={openPopup}
+        setOpenPopup={setOpenPopup}
+        title="Enter User Information"
+      >
+        <CreateUser />
+      </Popup>
       <TableContainer component={Paper}>
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
           <TableHead sx={{ "*": { fontWeight: 700 } }}>
@@ -46,7 +67,7 @@ export default function UsersList() {
                 <TableCell>
                   {user.roles &&
                     user.roles.map((role) => (
-                      <span>{_.capitalize(role.role_name)}</span>
+                      <span key={role.id}>{_.capitalize(role.role_name)}</span>
                     ))}
                 </TableCell>
                 <TableCell>

@@ -28,7 +28,7 @@ const SideNav = () => {
           "Answers",
           "Results",
         ].map((text) => (
-          <NavLink to={text.toLowerCase()}>
+          <NavLink to={text.toLowerCase()} key={text}>
             <ListItem key={text} disablePadding sx={{ display: "block" }}>
               <ListItemButton
                 sx={{
