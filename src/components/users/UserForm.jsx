@@ -11,19 +11,26 @@ import {
   MenuItem,
   Select,
 } from "@mui/material";
+import { DevTool } from "@hookform/devtools";
 
-export default function UserForm() {
+export default function UserForm({ users, setUsers, setOpenPopup }) {
   const { control, handleSubmit, reset } = useForm({
     defaultValues: {
       firstname: "",
       lastname: "",
       email: "",
       academic_year: "",
-      role_name: "",
+      roles: [{ role_name: "" }],
+      isActive: "",
     },
   });
 
-  const onSubmit = (data) => console.log(data);
+  const onSubmit = (data) => {
+    console.log("Data", data);
+    users.push(data);
+    setUsers(users);
+    setOpenPopup(false);
+  };
 
   return (
     <div>
@@ -39,13 +46,12 @@ export default function UserForm() {
           <Controller
             name="firstname"
             control={control}
-            rules={{ required: true }}
-            render={({ field: { onChange, value } }) => (
+            rules={{ required: { value: true, message: "yasfelgal" } }}
+            render={({ field }) => (
               <TextField
-                onChange={onChange}
-                value={value}
                 id="firstname"
                 label="First Name"
+                {...field}
                 variant="outlined"
               />
             )}
@@ -54,12 +60,11 @@ export default function UserForm() {
             name="lastname"
             control={control}
             rules={{ required: true }}
-            render={({ field: { onChange, value } }) => (
+            render={({ field }) => (
               <TextField
-                onChange={onChange}
-                value={value}
                 id="lastname"
                 label="Last Name"
+                {...field}
                 variant="outlined"
               />
             )}
@@ -68,12 +73,11 @@ export default function UserForm() {
             name="email"
             control={control}
             rules={{ required: true }}
-            render={({ field: { onChange, value } }) => (
+            render={({ field }) => (
               <TextField
-                onChange={onChange}
-                value={value}
                 id="email"
                 label="Email Address"
+                {...field}
                 variant="outlined"
               />
             )}
@@ -82,35 +86,46 @@ export default function UserForm() {
             name="academic_year"
             control={control}
             rules={{ required: true }}
-            render={({ field: { onChange, value } }) => (
+            render={({ field }) => (
               <TextField
-                onChange={onChange}
-                value={value}
                 id="academic_year"
                 label="Academic year"
                 variant="outlined"
+                {...field}
                 inputProps={{ inputMode: "numeric", pattern: "[0-9]*" }}
-                helperText="Please enter numbers only"
               />
             )}
           />
           <Controller
-            name="role_name"
+            name="roles[0].role_name"
             control={control}
             rules={{ required: true }}
-            render={({ field: { onChange, value } }) => (
-              <FormControl sx={{ m: 1, minWidth: 120 }}>
+            render={({ field }) => (
+              <FormControl sx={{ m: 1, minWidth: 250 }}>
                 <InputLabel id="role-label">Role</InputLabel>
-                <Select
-                  id="role"
-                  value={value}
-                  label="Role"
-                  onChange={onChange}
-                  labelId="role-label"
-                >
+                <Select id="role" label="Role" {...field} labelId="role-label">
                   <MenuItem value="Student">Student</MenuItem>
                   <MenuItem value="Admin">Admin</MenuItem>
                   <MenuItem value="Lecturer">Lecturer</MenuItem>
+                </Select>
+              </FormControl>
+            )}
+          />
+          <Controller
+            name="isActive"
+            control={control}
+            rules={{ required: true }}
+            render={({ field }) => (
+              <FormControl sx={{ m: 1, minWidth: 250 }}>
+                <InputLabel id="isActive-label">Status</InputLabel>
+                <Select
+                  id="isActive"
+                  label="Status"
+                  {...field}
+                  labelId="isActive-label"
+                >
+                  <MenuItem value="Yes">Active</MenuItem>
+                  <MenuItem value="No">Deactive</MenuItem>
                 </Select>
               </FormControl>
             )}
@@ -120,12 +135,13 @@ export default function UserForm() {
             variant="contained"
             type="submit"
             startIcon={<SaveOutlinedIcon />}
-            sx={{ float: "right" }}
+            sx={{ float: "right", right: "25px" }}
           >
             Save
           </Button>
         </Box>
       </form>
+      <DevTool control={control} placement="top-left" />
     </div>
   );
 }

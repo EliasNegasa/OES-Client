@@ -10,6 +10,7 @@ import DescriptionIcon from "@mui/icons-material/Description";
 import QuestionAnswerIcon from "@mui/icons-material/QuestionAnswer";
 import CreditScoreIcon from "@mui/icons-material/CreditScore";
 import DashboardIcon from "@mui/icons-material/Dashboard";
+import LiveTvIcon from "@mui/icons-material/LiveTv";
 import { NavLink } from "react-router-dom";
 import { useTheme } from "@emotion/react";
 
@@ -27,6 +28,7 @@ const SideNav = () => {
           "Questions",
           "Answers",
           "Results",
+          "Monitor Live",
         ].map((text) => (
           <NavLink to={text.toLowerCase()} key={text}>
             <ListItem key={text} disablePadding sx={{ display: "block" }}>
@@ -51,6 +53,7 @@ const SideNav = () => {
                   {text == "Questions" && <QuizIcon />}
                   {text == "Answers" && <QuestionAnswerIcon />}
                   {text == "Results" && <CreditScoreIcon />}
+                  {text == "Monitor Live" && <LiveTvIcon />}
                 </ListItemIcon>
                 <ListItemText primary={text} sx={{ color: "#8a9199" }} />
               </ListItemButton>

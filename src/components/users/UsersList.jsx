@@ -6,17 +6,18 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
-import { Stack, Typography, Button } from "@mui/material";
+import { Stack, Typography, Button, Chip } from "@mui/material";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
 import PersonAddAltIcon from "@mui/icons-material/PersonAddAlt";
 import _ from "lodash";
-import CreateUser from "./UserForm";
+import UserForm from "./UserForm";
 import Popup from "../Popup";
 
 export default function UsersList() {
   const [openPopup, setOpenPopup] = React.useState(false);
+  const [users, setUsers] = React.useState(userData);
 
   return (
     <>
@@ -37,7 +38,11 @@ export default function UsersList() {
         setOpenPopup={setOpenPopup}
         title="Enter User Information"
       >
-        <CreateUser />
+        <UserForm
+          users={users}
+          setUsers={setUsers}
+          setOpenPopup={setOpenPopup}
+        />
       </Popup>
       <TableContainer component={Paper}>
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
@@ -48,11 +53,12 @@ export default function UsersList() {
               <TableCell>Email Address</TableCell>
               <TableCell>Academic Year</TableCell>
               <TableCell>Role</TableCell>
+              <TableCell>Status</TableCell>
               <TableCell>Actions</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {userData.map((user) => (
+            {users.map((user) => (
               <TableRow
                 key={user.id}
                 sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
@@ -71,19 +77,54 @@ export default function UsersList() {
                     ))}
                 </TableCell>
                 <TableCell>
-                  <Stack direction="row">
-                    <VisibilityOutlinedIcon
-                      color="action"
-                      sx={{ fontSize: "1rem" }}
+                  {user.isActive == "Yes" ? (
+                    <Chip
+                      label="Active"
+                      color="success"
+                      size="small"
+                      sx={{ minWidth: "94px" }}
                     />
-                    <EditOutlinedIcon
+                  ) : (
+                    <Chip
+                      label="Deactive"
                       color="warning"
-                      sx={{ fontSize: "1rem" }}
+                      size="small"
+                      sx={{ minWidth: "94px" }}
                     />
-                    <DeleteOutlineIcon
-                      color="error"
-                      sx={{ fontSize: "1rem" }}
-                    />
+                  )}
+                </TableCell>
+                <TableCell>
+                  <Stack direction="row">
+                    <Button
+                      // onClick={() => setOpenPopup(false)}
+                      variant="secondary"
+                      sx={{ minWidth: "10px" }}
+                    >
+                      <VisibilityOutlinedIcon
+                        color="action"
+                        sx={{ fontSize: "1rem" }}
+                      />
+                    </Button>
+                    <Button
+                      onClick={(e) => console.log("Edit button clicked!", user)}
+                      variant="secondary"
+                      sx={{ minWidth: "10px" }}
+                    >
+                      <EditOutlinedIcon
+                        color="warning"
+                        sx={{ fontSize: "1rem" }}
+                      />
+                    </Button>
+                    <Button
+                      // onClick={() => setOpenPopup(false)}
+                      variant="secondary"
+                      sx={{ minWidth: "10px" }}
+                    >
+                      <DeleteOutlineIcon
+                        color="error"
+                        sx={{ fontSize: "1rem" }}
+                      />
+                    </Button>
                   </Stack>
                 </TableCell>
               </TableRow>
@@ -103,6 +144,7 @@ const userData = [
     email: "eeea@test.com",
     password: "$2b$08$kqry/7c0WXybF7GngrFR..xT1V9tD459R0UppjhJ6FZ8YBniGXZIW",
     academic_year: 2,
+    isActive: "Yes",
     createdAt: "2023-04-14T20:09:00.294Z",
     updatedAt: "2023-04-18T18:21:31.666Z",
     roles: [
@@ -128,6 +170,7 @@ const userData = [
     email: "eee@test.com",
     password: "$2b$08$7hnfcXY6dqfIcRR7mKP2iObzM.cT4mkaA87ED76Wk4eWmgfvpkUrO",
     academic_year: 1,
+    isActive: "No",
     createdAt: "2023-04-14T20:13:00.774Z",
     updatedAt: "2023-04-18T17:10:46.520Z",
     roles: [
@@ -168,6 +211,7 @@ const userData = [
     email: "kkk@test.com",
     password: "nnnnmmmm",
     academic_year: 1,
+    isActive: "Yes",
     createdAt: "2023-04-14T20:46:40.739Z",
     updatedAt: "2023-04-14T20:46:40.739Z",
     roles: [
@@ -208,6 +252,7 @@ const userData = [
     email: "ewewe@test.com",
     password: "$2b$08$w/ul75WSC11HsG197jhPmeb/lmK/uLeL1hBrIGzKBlvKjR9R56x8K",
     academic_year: 1,
+    isActive: "No",
     createdAt: "2023-04-18T12:08:24.322Z",
     updatedAt: "2023-04-18T12:08:24.322Z",
     roles: [],
@@ -220,6 +265,7 @@ const userData = [
     email: "erere@test.com",
     password: "$2b$08$wR8uvPK69WM0gjMsCy5xeuLxxYC/H6n12xMLupImW/Yy0n.D8TQWO",
     academic_year: 1,
+    isActive: "Yes",
     createdAt: "2023-04-18T14:17:36.495Z",
     updatedAt: "2023-04-18T14:17:36.495Z",
     roles: [],
@@ -232,6 +278,7 @@ const userData = [
     email: "cxc@test.com",
     password: "wwwwwqe",
     academic_year: 1,
+    isActive: "No",
     createdAt: "2023-04-18T12:05:53.731Z",
     updatedAt: "2023-04-18T12:05:53.731Z",
     roles: [],
@@ -244,6 +291,7 @@ const userData = [
     email: "hh@test.com",
     password: "nnnnnnnnn",
     academic_year: 1,
+    isActive: "Yes",
     createdAt: "2023-04-18T12:02:20.672Z",
     updatedAt: "2023-04-18T12:02:20.672Z",
     roles: [],
