@@ -1,4 +1,5 @@
 import * as React from "react";
+import { useEffect, useState } from "react";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -14,10 +15,22 @@ import PersonAddAltIcon from "@mui/icons-material/PersonAddAlt";
 import _ from "lodash";
 import UserForm from "./UserForm";
 import Popup from "../Popup";
+import EditForm from "./EditForm";
 
 export default function UsersList() {
-  const [openPopup, setOpenPopup] = React.useState(false);
-  const [users, setUsers] = React.useState(userData);
+  const [openPopup, setOpenPopup] = useState(false);
+  const [users, setUsers] = useState(userData);
+  const [singleUser, setSingleUser] = useState("");
+
+  useEffect(() => {
+    setUsers(users);
+  }, users);
+
+  const handleEditClicked = (user) => {
+    setOpenPopup(true);
+    setSingleUser(user);
+    console.log("US", user);
+  };
 
   return (
     <>
@@ -33,17 +46,7 @@ export default function UsersList() {
           Create User
         </Button>
       </Stack>
-      <Popup
-        openPopup={openPopup}
-        setOpenPopup={setOpenPopup}
-        title="Enter User Information"
-      >
-        <UserForm
-          users={users}
-          setUsers={setUsers}
-          setOpenPopup={setOpenPopup}
-        />
-      </Popup>
+
       <TableContainer component={Paper}>
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
           <TableHead sx={{ "*": { fontWeight: 700 } }}>
@@ -96,7 +99,7 @@ export default function UsersList() {
                 <TableCell>
                   <Stack direction="row">
                     <Button
-                      // onClick={() => setOpenPopup(false)}
+                      // onClick={() => setOpenPopup(true)}
                       variant="secondary"
                       sx={{ minWidth: "10px" }}
                     >
@@ -106,7 +109,7 @@ export default function UsersList() {
                       />
                     </Button>
                     <Button
-                      onClick={(e) => console.log("Edit button clicked!", user)}
+                      onClick={() => handleEditClicked(user)}
                       variant="secondary"
                       sx={{ minWidth: "10px" }}
                     >
@@ -132,6 +135,32 @@ export default function UsersList() {
           </TableBody>
         </Table>
       </TableContainer>
+
+      <Popup
+        openPopup={openPopup}
+        setOpenPopup={setOpenPopup}
+        setSingleUser={setSingleUser}
+        title={
+          singleUser ? "Update User Information" : "Enter User Information"
+        }
+      >
+        {singleUser ? (
+          <EditForm
+            user={singleUser}
+            users={users}
+            openPopup={openPopup}
+            setOpenPopup={setOpenPopup}
+            singleUser={singleUser}
+            setSingleUser={setSingleUser}
+          />
+        ) : (
+          <UserForm
+            users={users}
+            openPopup={openPopup}
+            setOpenPopup={setOpenPopup}
+          />
+        )}
+      </Popup>
     </>
   );
 }

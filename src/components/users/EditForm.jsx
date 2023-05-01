@@ -35,15 +35,16 @@ const schema = yup.object({
   isActive: yup.string().required("User Status is required"),
 });
 
-export default function UserForm({ users, setOpenPopup }) {
+export default function EditForm({ users, setOpenPopup, singleUser }) {
   const { control, handleSubmit, reset, formState } = useForm({
     defaultValues: {
-      firstname: "",
-      lastname: "",
-      email: "",
-      academic_year: "",
-      roles: [{ role_name: "" }],
-      isActive: "",
+      id: singleUser.id,
+      firstname: singleUser.firstname,
+      lastname: singleUser.lastname,
+      email: singleUser.email,
+      academic_year: singleUser.academic_year,
+      roles: [{ role_name: singleUser.role_name || "" }],
+      isActive: singleUser.isActive,
     },
     resolver: yupResolver(schema),
   });
@@ -52,7 +53,11 @@ export default function UserForm({ users, setOpenPopup }) {
 
   const onSubmit = (data) => {
     console.log("Data", data);
-    users.push(data);
+    console.log("Users", users);
+    // users.push(data);
+    // users.map((user) => {
+    //   user.id === data.id ? "T" : "F";
+    // });
     setOpenPopup(false);
   };
 

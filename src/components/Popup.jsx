@@ -6,13 +6,23 @@ import { Stack, Button } from "@mui/material";
 import DialogTitle from "@mui/material/DialogTitle";
 import CloseIcon from "@mui/icons-material/Close";
 
-export default function Popup({ openPopup, setOpenPopup, title, children }) {
+export default function Popup({
+  openPopup,
+  setOpenPopup,
+  setSingleUser,
+  title,
+  children,
+}) {
+  const handleClose = () => {
+    setOpenPopup(false);
+    setSingleUser("");
+  };
   return (
     <Dialog open={openPopup}>
       <Stack direction="row" sx={{ justifyContent: "space-between" }}>
         <DialogTitle>{title}</DialogTitle>
         <DialogActions>
-          <Button onClick={() => setOpenPopup(false)} variant="secondary">
+          <Button onClick={handleClose} variant="secondary">
             <CloseIcon />
           </Button>
         </DialogActions>
