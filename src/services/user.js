@@ -6,7 +6,7 @@ const apiEndpoint = `${apiUrl}/api/users`;
 // http.setContentType('application/json');
 
 export function getUsers() {
-  return http.get(`${apiEndpoint}/${limit}`);
+  return http.get(`${apiEndpoint}/`);
 }
 
 export function getUser(userId) {

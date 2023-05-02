@@ -22,9 +22,9 @@ function setContentType(type = "application/json") {
 function setJwt(jwt) {
   Axios.defaults.headers.common["x-access-token"] = jwt;
 }
-function setJwt(jwt) {
-  Axios.defaults.headers.common["Authorization"] = "Bearer " + jwt;
-}
+// function setJwt(jwt) {
+//   Axios.defaults.headers.common["Authorization"] = "Bearer " + jwt;
+// }
 
 export default {
   get: Axios.get,

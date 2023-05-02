@@ -1,13 +1,11 @@
+import { useEffect, useState } from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
-import CourseList from "./components/courses/CoursesList";
-import UserList from "./components/users/UsersList";
-import Layout from "./components/Layout";
-import ExamsList from "./components/exams/ExamsList";
-import QuestionsList from "./components/questions/QuestionsList";
-import AnswersList from "./components/answers/AnswersList";
-import ResultsList from "./components/results/ResultsList";
-import Dashboard from "./components/dashboard.jsx/dashboard";
+import LoginForm from "./components/login/LoginForm";
+import { ReactNotifications } from "react-notifications-component";
+import Router from "./components/routes/router";
+import { getUsers } from "./services/user";
+import auth from "./services/auth";
 
 const theme = createTheme({
   typography: {
@@ -33,21 +31,62 @@ const theme = createTheme({
 });
 
 function App() {
+  const [user, setUser] = useState();
+  const [expired, setExpired] = useState(false);
+
+  useEffect(() => {
+    const user = auth.getCurrentUser();
+
+    if (user) {
+      if (Date.now() >= user.exp * 1000) {
+        console.log("EXPIRED");
+        setExpired({ expired: true });
+        localStorage.removeItem("token");
+      }
+      setUser(user);
+    }
+    // async function fetchUser() {
+    //   const { data } = await getUsers();
+    //   setUser(data);
+    // }
+    // fetchUser();
+  }, []);
+
   return (
     <ThemeProvider theme={theme}>
       <>
-        <Routes>
-          <Route element={<Layout />}>
-            <Route path="/" element={<Dashboard />} />
-            <Route path="/dashboard" element={<Navigate to="/" />} />
-            <Route path="/courses" element={<CourseList />} />
-            <Route path="/users" element={<UserList />} />
-            <Route path="/exams" element={<ExamsList />} />
-            <Route path="/questions" element={<QuestionsList />} />
-            <Route path="/answers" element={<AnswersList />} />
-            <Route path="/results" element={<ResultsList />} />
-          </Route>
-        </Routes>
+        {console.log("uusrs", user)}
+        <ReactNotifications />
+        {!user && (
+          <Routes>
+            <Route path="*" element={<Navigate to="auth/signin" replace />} />
+            <Route exact path="auth/signin" element={<LoginForm />} />
+          </Routes>
+        )}
+
+        {user && (
+          <>
+            {console.log("USERR", user)}
+            {expired ? (
+              <>
+                {console.log("EXP", expired)}
+                <Routes>
+                  <Route
+                    path="*"
+                    element={<Navigate to="auth/login" replace />}
+                  />
+                  <Route exact path="auth/signin" element={<LoginForm />} />
+                </Routes>
+              </>
+            ) : (
+              <>
+                {console.log("ROUTER")}
+
+                <Router />
+              </>
+            )}
+          </>
+        )}
       </>
     </ThemeProvider>
   );

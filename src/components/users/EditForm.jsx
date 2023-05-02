@@ -1,23 +1,14 @@
-import React, { useState } from "react";
-import { useForm, Controller } from "react-hook-form";
-import TextField from "@mui/material/TextField";
+import React from "react";
+import { useForm } from "react-hook-form";
 import Button from "@mui/material/Button";
 import SaveOutlinedIcon from "@mui/icons-material/SaveOutlined";
-import {
-  Box,
-  Divider,
-  FormControl,
-  InputLabel,
-  MenuItem,
-  Select,
-  Alert,
-  Stack,
-} from "@mui/material";
+import { Box, Divider, Stack } from "@mui/material";
 import _ from "lodash";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { DevTool } from "@hookform/devtools";
-import { useEffect } from "react";
+import FormInput from "../ui/FormInput";
+import FormSelect from "../ui/FormSelect";
 
 const schema = yup.object({
   firstname: yup.string().required("First Name is required"),
@@ -71,146 +62,53 @@ export default function EditForm({ users, setOpenPopup, singleUser }) {
           }}
         >
           <Stack direction="row">
-            <Stack direction="column">
-              <Controller
-                name="firstname"
-                control={control}
-                render={({ field }) => (
-                  <TextField
-                    id="firstname"
-                    label="First Name"
-                    {...field}
-                    variant="outlined"
-                  />
-                )}
-              />
-              {errors.firstname && (
-                <Alert severity="error" sx={{ m: 1 }}>
-                  {errors.firstname?.message}
-                </Alert>
-              )}
-            </Stack>
+            <FormInput
+              name="firstname"
+              control={control}
+              label="First Name"
+              errors={errors}
+            />
 
-            <Stack direction="column">
-              <Controller
-                name="lastname"
-                control={control}
-                render={({ field }) => (
-                  <TextField
-                    id="lastname"
-                    label="Last Name"
-                    {...field}
-                    variant="outlined"
-                  />
-                )}
-              />
-              {errors.lastname && (
-                <Alert severity="error" sx={{ m: 1 }}>
-                  {errors.lastname?.message}
-                </Alert>
-              )}
-            </Stack>
+            <FormInput
+              name="lastname"
+              control={control}
+              label="Last Name"
+              errors={errors}
+            />
           </Stack>
 
           <Stack direction="row">
-            <Stack direction="column">
-              <Controller
-                name="email"
-                control={control}
-                rules={{
-                  validate: {
-                    EmailAvailable: (fieldValue) => {
-                      const index = _.findIndex(users, (o) => {
-                        return o.email == fieldValue;
-                      });
-                      return index == -1 || "Email already exists";
-                    },
-                  },
-                }}
-                render={({ field }) => (
-                  <TextField
-                    id="email"
-                    label="Email Address"
-                    {...field}
-                    variant="outlined"
-                  />
-                )}
-              />
-              {errors.email && (
-                <Alert severity="error" sx={{ m: 1 }}>
-                  {errors.email?.message}
-                </Alert>
-              )}
-            </Stack>
+            <FormInput
+              name="email"
+              control={control}
+              label="Email Address"
+              errors={errors}
+            />
 
-            <Stack direction="column">
-              <Controller
-                name="academic_year"
-                control={control}
-                render={({ field }) => (
-                  <TextField
-                    id="academic_year"
-                    label="Academic year"
-                    variant="outlined"
-                    {...field}
-                  />
-                )}
-              />
-              {errors.academic_year && (
-                <Alert severity="error" sx={{ m: 1 }}>
-                  {errors.academic_year?.message}
-                </Alert>
-              )}
-            </Stack>
+            <FormInput
+              name="academic_year"
+              control={control}
+              label="Academic year"
+              errors={errors}
+            />
           </Stack>
 
           <Stack direction="row">
-            <Stack direction="column">
-              <Controller
-                name="roles[0].role_name"
-                control={control}
-                render={({ field }) => (
-                  <FormControl sx={{ m: 1, minWidth: 250 }}>
-                    <InputLabel id="role-label">Role</InputLabel>
-                    <Select
-                      id="role"
-                      label="Role"
-                      {...field}
-                      labelId="role-label"
-                    >
-                      <MenuItem value="Student">Student</MenuItem>
-                      <MenuItem value="Admin">Admin</MenuItem>
-                      <MenuItem value="Lecturer">Lecturer</MenuItem>
-                    </Select>
-                  </FormControl>
-                )}
-              />
-            </Stack>
-            <Stack direction="column">
-              <Controller
-                name="isActive"
-                control={control}
-                render={({ field }) => (
-                  <FormControl sx={{ m: 1, minWidth: 250 }}>
-                    <InputLabel id="isActive-label">Status</InputLabel>
-                    <Select
-                      id="isActive"
-                      label="Status"
-                      {...field}
-                      labelId="isActive-label"
-                    >
-                      <MenuItem value="Yes">Active</MenuItem>
-                      <MenuItem value="No">Deactive</MenuItem>
-                    </Select>
-                  </FormControl>
-                )}
-              />
-              {errors.isActive && (
-                <Alert severity="error" sx={{ m: 1 }}>
-                  {errors.isActive?.message}
-                </Alert>
-              )}
-            </Stack>
+            <FormSelect
+              name="roles[0].role_name"
+              control={control}
+              label="Role"
+              options={["Student", "Admin", "Lecturer"]}
+              errors={errors}
+            />
+
+            <FormSelect
+              name="isActive"
+              control={control}
+              label="Status"
+              options={["Active", "Deactive"]}
+              errors={errors}
+            />
           </Stack>
           <Divider sx={{ marginTop: "10px", marginBottom: "10px" }} />
           <Button

@@ -80,7 +80,7 @@ export default function UsersList() {
                     ))}
                 </TableCell>
                 <TableCell>
-                  {user.isActive == "Yes" ? (
+                  {user.isActive == "Active" ? (
                     <Chip
                       label="Active"
                       color="success"
@@ -173,7 +173,7 @@ const userData = [
     email: "eeea@test.com",
     password: "$2b$08$kqry/7c0WXybF7GngrFR..xT1V9tD459R0UppjhJ6FZ8YBniGXZIW",
     academic_year: 2,
-    isActive: "Yes",
+    isActive: "Active",
     createdAt: "2023-04-14T20:09:00.294Z",
     updatedAt: "2023-04-18T18:21:31.666Z",
     roles: [
@@ -199,7 +199,7 @@ const userData = [
     email: "eee@test.com",
     password: "$2b$08$7hnfcXY6dqfIcRR7mKP2iObzM.cT4mkaA87ED76Wk4eWmgfvpkUrO",
     academic_year: 1,
-    isActive: "No",
+    isActive: "Deactive",
     createdAt: "2023-04-14T20:13:00.774Z",
     updatedAt: "2023-04-18T17:10:46.520Z",
     roles: [
@@ -240,7 +240,7 @@ const userData = [
     email: "kkk@test.com",
     password: "nnnnmmmm",
     academic_year: 1,
-    isActive: "Yes",
+    isActive: "Active",
     createdAt: "2023-04-14T20:46:40.739Z",
     updatedAt: "2023-04-14T20:46:40.739Z",
     roles: [
@@ -281,7 +281,7 @@ const userData = [
     email: "ewewe@test.com",
     password: "$2b$08$w/ul75WSC11HsG197jhPmeb/lmK/uLeL1hBrIGzKBlvKjR9R56x8K",
     academic_year: 1,
-    isActive: "No",
+    isActive: "Deactive",
     createdAt: "2023-04-18T12:08:24.322Z",
     updatedAt: "2023-04-18T12:08:24.322Z",
     roles: [],
@@ -294,7 +294,7 @@ const userData = [
     email: "erere@test.com",
     password: "$2b$08$wR8uvPK69WM0gjMsCy5xeuLxxYC/H6n12xMLupImW/Yy0n.D8TQWO",
     academic_year: 1,
-    isActive: "Yes",
+    isActive: "Active",
     createdAt: "2023-04-18T14:17:36.495Z",
     updatedAt: "2023-04-18T14:17:36.495Z",
     roles: [],
@@ -307,7 +307,7 @@ const userData = [
     email: "cxc@test.com",
     password: "wwwwwqe",
     academic_year: 1,
-    isActive: "No",
+    isActive: "Deactive",
     createdAt: "2023-04-18T12:05:53.731Z",
     updatedAt: "2023-04-18T12:05:53.731Z",
     roles: [],
@@ -320,7 +320,7 @@ const userData = [
     email: "hh@test.com",
     password: "nnnnnnnnn",
     academic_year: 1,
-    isActive: "Yes",
+    isActive: "Active",
     createdAt: "2023-04-18T12:02:20.672Z",
     updatedAt: "2023-04-18T12:02:20.672Z",
     roles: [],

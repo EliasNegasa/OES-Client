@@ -1,23 +1,14 @@
-import React, { useState } from "react";
-import { useForm, Controller } from "react-hook-form";
-import TextField from "@mui/material/TextField";
+import React from "react";
+import { useForm } from "react-hook-form";
 import Button from "@mui/material/Button";
 import SaveOutlinedIcon from "@mui/icons-material/SaveOutlined";
-import {
-  Box,
-  Divider,
-  FormControl,
-  InputLabel,
-  MenuItem,
-  Select,
-  Alert,
-  Stack,
-} from "@mui/material";
+import { Box, Divider, Stack } from "@mui/material";
 import _ from "lodash";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { DevTool } from "@hookform/devtools";
-import { useEffect } from "react";
+import FormInput from "../ui/FormInput";
+import FormSelect from "../ui/FormSelect";
 
 const schema = yup.object({
   firstname: yup.string().required("First Name is required"),
@@ -57,7 +48,7 @@ export default function UserForm({ users, setOpenPopup }) {
   };
 
   return (
-    <div>
+    <>
       <form onSubmit={handleSubmit(onSubmit)}>
         <Box
           component="div"
@@ -66,49 +57,72 @@ export default function UserForm({ users, setOpenPopup }) {
           }}
         >
           <Stack direction="row">
-            <Stack direction="column">
-              <Controller
-                name="firstname"
-                control={control}
-                render={({ field }) => (
-                  <TextField
-                    id="firstname"
-                    label="First Name"
-                    {...field}
-                    variant="outlined"
-                  />
-                )}
-              />
-              {errors.firstname && (
-                <Alert severity="error" sx={{ m: 1 }}>
-                  {errors.firstname?.message}
-                </Alert>
-              )}
-            </Stack>
+            <FormInput
+              name="firstname"
+              control={control}
+              label="First Name"
+              errors={errors}
+            />
 
-            <Stack direction="column">
-              <Controller
-                name="lastname"
-                control={control}
-                render={({ field }) => (
-                  <TextField
-                    id="lastname"
-                    label="Last Name"
-                    {...field}
-                    variant="outlined"
-                  />
-                )}
-              />
-              {errors.lastname && (
-                <Alert severity="error" sx={{ m: 1 }}>
-                  {errors.lastname?.message}
-                </Alert>
-              )}
-            </Stack>
+            <FormInput
+              name="lastname"
+              control={control}
+              label="Last Name"
+              errors={errors}
+            />
           </Stack>
 
           <Stack direction="row">
-            <Stack direction="column">
+            <FormInput
+              name="email"
+              control={control}
+              label="Email Address"
+              errors={errors}
+            />
+
+            <FormInput
+              name="academic_year"
+              control={control}
+              label="Academic year"
+              errors={errors}
+            />
+          </Stack>
+
+          <Stack direction="row">
+            <FormSelect
+              name="roles[0].role_name"
+              control={control}
+              label="Role"
+              options={["Student", "Admin", "Lecturer"]}
+              errors={errors}
+            />
+
+            <FormSelect
+              name="isActive"
+              control={control}
+              label="Status"
+              options={["Active", "Deactive"]}
+              errors={errors}
+            />
+          </Stack>
+          <Divider sx={{ marginTop: "10px", marginBottom: "10px" }} />
+          <Button
+            variant="contained"
+            type="submit"
+            startIcon={<SaveOutlinedIcon />}
+            sx={{ float: "right", right: "25px" }}
+          >
+            Save
+          </Button>
+        </Box>
+      </form>
+      <DevTool control={control} placement="top-left" />
+    </>
+  );
+}
+
+{
+  /* <Stack direction="column">
               <Controller
                 name="email"
                 control={control}
@@ -136,89 +150,5 @@ export default function UserForm({ users, setOpenPopup }) {
                   {errors.email?.message}
                 </Alert>
               )}
-            </Stack>
-
-            <Stack direction="column">
-              <Controller
-                name="academic_year"
-                control={control}
-                render={({ field }) => (
-                  <TextField
-                    id="academic_year"
-                    label="Academic year"
-                    variant="outlined"
-                    {...field}
-                  />
-                )}
-              />
-              {errors.academic_year && (
-                <Alert severity="error" sx={{ m: 1 }}>
-                  {errors.academic_year?.message}
-                </Alert>
-              )}
-            </Stack>
-          </Stack>
-
-          <Stack direction="row">
-            <Stack direction="column">
-              <Controller
-                name="roles[0].role_name"
-                control={control}
-                render={({ field }) => (
-                  <FormControl sx={{ m: 1, minWidth: 250 }}>
-                    <InputLabel id="role-label">Role</InputLabel>
-                    <Select
-                      id="role"
-                      label="Role"
-                      {...field}
-                      labelId="role-label"
-                    >
-                      <MenuItem value="Student">Student</MenuItem>
-                      <MenuItem value="Admin">Admin</MenuItem>
-                      <MenuItem value="Lecturer">Lecturer</MenuItem>
-                    </Select>
-                  </FormControl>
-                )}
-              />
-            </Stack>
-            <Stack direction="column">
-              <Controller
-                name="isActive"
-                control={control}
-                render={({ field }) => (
-                  <FormControl sx={{ m: 1, minWidth: 250 }}>
-                    <InputLabel id="isActive-label">Status</InputLabel>
-                    <Select
-                      id="isActive"
-                      label="Status"
-                      {...field}
-                      labelId="isActive-label"
-                    >
-                      <MenuItem value="Yes">Active</MenuItem>
-                      <MenuItem value="No">Deactive</MenuItem>
-                    </Select>
-                  </FormControl>
-                )}
-              />
-              {errors.isActive && (
-                <Alert severity="error" sx={{ m: 1 }}>
-                  {errors.isActive?.message}
-                </Alert>
-              )}
-            </Stack>
-          </Stack>
-          <Divider sx={{ marginTop: "10px", marginBottom: "10px" }} />
-          <Button
-            variant="contained"
-            type="submit"
-            startIcon={<SaveOutlinedIcon />}
-            sx={{ float: "right", right: "25px" }}
-          >
-            Save
-          </Button>
-        </Box>
-      </form>
-      <DevTool control={control} placement="top-left" />
-    </div>
-  );
+            </Stack> */
 }
