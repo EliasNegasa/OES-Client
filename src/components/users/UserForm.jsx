@@ -4,7 +4,6 @@ import Button from "@mui/material/Button";
 import SaveOutlinedIcon from "@mui/icons-material/SaveOutlined";
 import { Box, Divider, Stack } from "@mui/material";
 import _ from "lodash";
-import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { DevTool } from "@hookform/devtools";
 import FormInput from "../ui/FormInput";
@@ -13,22 +12,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { saveUser } from "../../services/user";
 import BackdropLoader from "../ui/Backdrop";
 import NotificationSnackbars from "../ui/Snackbar";
-
-const schema = yup.object({
-  firstname: yup.string().required("First Name is required"),
-  lastname: yup.string().required("Last Name is required"),
-  email: yup
-    .string()
-    .email("Email format is not valid")
-    .required("Email is required"),
-  academic_year: yup
-    .number("Academic Year must be a number")
-    .max(10)
-    .required("Academic Year is required")
-    .positive()
-    .integer(),
-  isActive: yup.string().required("User Status is required"),
-});
+import UserSchema from "../../validations/user";
 
 export default function UserForm({ setOpenPopup }) {
   const { control, handleSubmit, reset, formState } = useForm({
@@ -40,7 +24,7 @@ export default function UserForm({ setOpenPopup }) {
       roles: [{ role_name: "" }],
       isActive: "",
     },
-    resolver: yupResolver(schema),
+    resolver: yupResolver(UserSchema()),
   });
 
   const { errors } = formState;

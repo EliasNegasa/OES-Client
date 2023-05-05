@@ -1,38 +1,43 @@
-import React from "react";
-import { useForm } from "react-hook-form";
+import React, { useState } from "react";
+import { Controller, useForm } from "react-hook-form";
 import Button from "@mui/material/Button";
 import SaveOutlinedIcon from "@mui/icons-material/SaveOutlined";
-import { Box, Divider, Stack } from "@mui/material";
+import { Box, Divider, Stack, TextField, useRadioGroup } from "@mui/material";
 import _ from "lodash";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { DevTool } from "@hookform/devtools";
 import FormInput from "../ui/FormInput";
-import FormSelect from "../ui/FormSelect";
-import { updateUser } from "../../services/user";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import BackdropLoader from "../ui/Backdrop";
 import NotificationSnackbars from "../ui/Snackbar";
-import UserSchema from "../../validations/user";
+import { updateExam } from "../../services/exam";
+import FormDate from "../ui/FormDate";
+import ExamSchema from "../../validations/exam";
+import ParseDate from "../../utils/parseDate";
 
-export default function EditForm({ setOpenPopup, user }) {
+export default function EditExam({ exam, setOpenPopup }) {
   const { control, handleSubmit, reset, formState } = useForm({
     defaultValues: {
-      id: user.id,
-      firstname: user.firstname,
-      lastname: user.lastname,
-      email: user.email,
-      academic_year: user.academic_year,
-      roles: [{ role_name: user.role_name || "" }],
-      isActive: user.isActive,
-      password: user.password,
+      id: exam.id,
+      exam_name: exam.exam_name,
+      duration_minutes: exam.duration_minutes,
+      exam_start: ParseDate(exam.exam_start),
+      exam_end: "",
     },
-    resolver: yupResolver(UserSchema()),
+    resolver: yupResolver(ExamSchema()),
   });
 
   const { errors } = formState;
 
+  const queryClient = useQueryClient();
+  useMutation(updateExam, {
+    onSuccess: () => {
+      queryClient.invalidateQueries(["exams-list"]);
+    },
+  });
+
   const { mutate, isLoading, isError, isSuccess, error } =
-    useMutation(updateUser);
+    useMutation(updateExam);
 
   const onSubmit = (data) => {
     console.log("Data", data);
@@ -52,72 +57,60 @@ export default function EditForm({ setOpenPopup, user }) {
       )}
       {isSuccess && (
         <NotificationSnackbars
-          message="User updated successfully"
+          message="Exam updated successfully"
           severity="success"
         />
       )}
+
       <form onSubmit={handleSubmit(onSubmit)}>
         <Box
           component="div"
           sx={{
-            "& .MuiTextField-root": { m: 1, width: "25ch" },
+            "& .MuiTextField-root": { m: 1, width: "32ch" },
           }}
         >
           <Stack direction="row">
             <FormInput
-              name="firstname"
+              name="exam_name"
               control={control}
-              label="First Name"
-              errors={errors}
-            />
-
-            <FormInput
-              name="lastname"
-              control={control}
-              label="Last Name"
+              label="Exam Name"
               errors={errors}
             />
           </Stack>
 
           <Stack direction="row">
             <FormInput
-              name="email"
+              name="duration_minutes"
               control={control}
-              label="Email Address"
-              errors={errors}
-            />
-
-            <FormInput
-              name="academic_year"
-              control={control}
-              label="Academic year"
+              label="Exam Duration"
               errors={errors}
             />
           </Stack>
 
           <Stack direction="row">
-            <FormSelect
-              name="roles[0].role_name"
+            <FormDate
+              name="exam_start"
               control={control}
-              label="Role"
-              options={["Student", "Admin", "Lecturer"]}
-              errors={errors}
-            />
-
-            <FormSelect
-              name="isActive"
-              control={control}
-              label="Status"
-              options={["Active", "Deactive"]}
+              label="Start Date"
               errors={errors}
             />
           </Stack>
+
+          <Stack direction="row">
+            <FormDate
+              name="exam_end"
+              control={control}
+              label="End Date"
+              errors={errors}
+            />
+          </Stack>
+
           <Divider sx={{ marginTop: "10px", marginBottom: "10px" }} />
           <Button
             variant="contained"
             type="submit"
             startIcon={<SaveOutlinedIcon />}
-            sx={{ float: "right", right: "25px" }}
+            sx={{ float: "right", right: "10px" }}
           >
             Save
           </Button>

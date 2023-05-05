@@ -14,18 +14,17 @@ import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
 import PersonAddAltIcon from "@mui/icons-material/PersonAddAlt";
 import _ from "lodash";
 import UserForm from "./UserForm";
-import Popup from "../Popup";
 import EditForm from "./EditForm";
 import { getUsers } from "../../services/user";
 import { useQuery } from "@tanstack/react-query";
 import BackdropLoader from "../ui/Backdrop";
 import NotificationSnackbars from "../ui/Snackbar";
 import { Link } from "react-router-dom";
+import Popup from "../ui/Popup";
 
 export default function UsersList() {
   const [openPopup, setOpenPopup] = useState(false);
-  // const [users, setUsers] = useState([]);
-  const [singleUser, setSingleUser] = useState("");
+  const [user, setUser] = useState("");
 
   const {
     isLoading,
@@ -34,18 +33,15 @@ export default function UsersList() {
     error,
   } = useQuery(["users-list"], getUsers);
 
-  // useEffect(() => {
-  //   async function fetchUsers() {
-  //     const { data } = await getUsers();
-  //     setUsers(data);
-  //   }
-  //   fetchUsers();
-  // }, []);
-
   const handleEditClicked = (user) => {
     setOpenPopup(true);
-    setSingleUser(user);
+    setUser(user);
     console.log("US", user);
+  };
+
+  const handleCreateClicked = () => {
+    setUser("");
+    setOpenPopup(true);
   };
 
   return (
@@ -56,7 +52,7 @@ export default function UsersList() {
         </Typography>
         <Button
           variant="contained"
-          onClick={() => setOpenPopup(true)}
+          onClick={handleCreateClicked}
           startIcon={<PersonAddAltIcon />}
         >
           Create User
@@ -162,19 +158,13 @@ export default function UsersList() {
       <Popup
         openPopup={openPopup}
         setOpenPopup={setOpenPopup}
-        setSingleUser={setSingleUser}
-        title={
-          singleUser ? "Update User Information" : "Enter User Information"
-        }
+        title={user ? "Update User Information" : "Enter User Information"}
       >
-        {singleUser ? (
+        {user ? (
           <EditForm
-            user={singleUser}
-            users={users}
+            user={user}
             openPopup={openPopup}
             setOpenPopup={setOpenPopup}
-            singleUser={singleUser}
-            setSingleUser={setSingleUser}
           />
         ) : (
           <UserForm openPopup={openPopup} setOpenPopup={setOpenPopup} />

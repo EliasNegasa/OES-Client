@@ -6,16 +6,9 @@ import { Stack, Button } from "@mui/material";
 import DialogTitle from "@mui/material/DialogTitle";
 import CloseIcon from "@mui/icons-material/Close";
 
-export default function Popup({
-  openPopup,
-  setOpenPopup,
-  setSingleUser,
-  title,
-  children,
-}) {
+export default function Popup({ openPopup, setOpenPopup, title, children }) {
   const handleClose = () => {
     setOpenPopup(false);
-    setSingleUser("");
   };
   return (
     <Dialog open={openPopup}>

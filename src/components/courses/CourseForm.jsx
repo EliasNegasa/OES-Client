@@ -7,32 +7,33 @@ import _ from "lodash";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { DevTool } from "@hookform/devtools";
 import FormInput from "../ui/FormInput";
-import FormSelect from "../ui/FormSelect";
-import { updateUser } from "../../services/user";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import BackdropLoader from "../ui/Backdrop";
 import NotificationSnackbars from "../ui/Snackbar";
-import UserSchema from "../../validations/user";
+import { saveCourse } from "../../services/course";
+import CourseSchema from "../../validations/course";
 
-export default function EditForm({ setOpenPopup, user }) {
+export default function CourseForm({ setOpenPopup }) {
   const { control, handleSubmit, reset, formState } = useForm({
     defaultValues: {
-      id: user.id,
-      firstname: user.firstname,
-      lastname: user.lastname,
-      email: user.email,
-      academic_year: user.academic_year,
-      roles: [{ role_name: user.role_name || "" }],
-      isActive: user.isActive,
-      password: user.password,
+      course_name: "",
+      course_year: "",
+      course_code: "",
     },
-    resolver: yupResolver(UserSchema()),
+    resolver: yupResolver(CourseSchema()),
   });
 
   const { errors } = formState;
 
+  const queryClient = useQueryClient();
+  useMutation(saveCourse, {
+    onSuccess: () => {
+      queryClient.invalidateQueries(["courses-list"]);
+    },
+  });
+
   const { mutate, isLoading, isError, isSuccess, error } =
-    useMutation(updateUser);
+    useMutation(saveCourse);
 
   const onSubmit = (data) => {
     console.log("Data", data);
@@ -52,63 +53,41 @@ export default function EditForm({ setOpenPopup, user }) {
       )}
       {isSuccess && (
         <NotificationSnackbars
-          message="User updated successfully"
+          message="Course added successfully"
           severity="success"
         />
       )}
+
       <form onSubmit={handleSubmit(onSubmit)}>
         <Box
           component="div"
           sx={{
-            "& .MuiTextField-root": { m: 1, width: "25ch" },
+            "& .MuiTextField-root": { m: 1, width: "32ch" },
           }}
         >
           <Stack direction="row">
             <FormInput
-              name="firstname"
+              name="course_name"
               control={control}
-              label="First Name"
-              errors={errors}
-            />
-
-            <FormInput
-              name="lastname"
-              control={control}
-              label="Last Name"
+              label="Course Name"
               errors={errors}
             />
           </Stack>
 
           <Stack direction="row">
             <FormInput
-              name="email"
+              name="course_year"
               control={control}
-              label="Email Address"
-              errors={errors}
-            />
-
-            <FormInput
-              name="academic_year"
-              control={control}
-              label="Academic year"
+              label="Course Year"
               errors={errors}
             />
           </Stack>
 
           <Stack direction="row">
-            <FormSelect
-              name="roles[0].role_name"
+            <FormInput
+              name="course_code"
               control={control}
-              label="Role"
-              options={["Student", "Admin", "Lecturer"]}
-              errors={errors}
-            />
-
-            <FormSelect
-              name="isActive"
-              control={control}
-              label="Status"
-              options={["Active", "Deactive"]}
+              label="Course Code"
               errors={errors}
             />
           </Stack>
@@ -117,7 +96,7 @@ export default function EditForm({ setOpenPopup, user }) {
             variant="contained"
             type="submit"
             startIcon={<SaveOutlinedIcon />}
-            sx={{ float: "right", right: "25px" }}
+            sx={{ float: "right", right: "10px" }}
           >
             Save
           </Button>

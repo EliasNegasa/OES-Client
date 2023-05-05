@@ -20,7 +20,7 @@ const FormInput = ({ name, control, label, errors, ...rest }) => {
         )}
       />
       {errors[name] && (
-        <Alert severity="error" sx={{ m: 1 }}>
+        <Alert severity="error" sx={{ m: 1, maxWidth: "36ch" }}>
           {errors[name]?.message}
         </Alert>
       )}
