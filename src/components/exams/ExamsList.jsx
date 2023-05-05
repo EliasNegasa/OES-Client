@@ -17,6 +17,7 @@ import { useQuery } from "@tanstack/react-query";
 import Popup from "../ui/Popup";
 import CreateExam from "./CreateExam";
 import EditExam from "./EditExam";
+import QuizOutlinedIcon from "@mui/icons-material/QuizOutlined";
 
 export default function ExamsList() {
   const [openPopup, setOpenPopup] = useState(false);
@@ -97,8 +98,19 @@ export default function ExamsList() {
                   </Box>
                   <Stack
                     direction="row"
-                    sx={{ justifyContent: "flex-end", width: "100%" }}
+                    sx={{
+                      justifyContent: "space-between",
+                      width: "90%",
+                      margin: "0 auto",
+                    }}
                   >
+                    <Button
+                      variant="text"
+                      // onClick={() => handleEditClicked(exam)}
+                      startIcon={<QuizOutlinedIcon />}
+                    >
+                      Questions
+                    </Button>
                     <Button
                       variant="text"
                       onClick={() => handleEditClicked(exam)}

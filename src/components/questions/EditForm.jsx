@@ -5,37 +5,35 @@ import SaveOutlinedIcon from "@mui/icons-material/SaveOutlined";
 import { Box, Divider, Stack } from "@mui/material";
 import _ from "lodash";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { DevTool } from "@hookform/devtools";
 import FormInput from "../ui/FormInput";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import BackdropLoader from "../ui/Backdrop";
 import NotificationSnackbars from "../ui/Snackbar";
-import { saveExam } from "../../services/exam";
-import FormDate from "../ui/FormDate";
-import ExamSchema from "../../validations/exam";
+import QuestionSchema from "../../validations/question";
+import { updateQuestion } from "../../services/questions";
+import FormSelect from "../ui/FormSelect";
 
-export default function CreateExam({ setOpenPopup }) {
+export default function EditQuestion({ question, setOpenPopup }) {
   const { control, handleSubmit, reset, formState } = useForm({
     defaultValues: {
-      exam_name: "",
-      duration_minutes: "",
-      exam_start: "",
-      exam_end: "",
+      id: question.id,
+      question_text: question.question_text,
+      question_type: question.question_type || "",
     },
-    resolver: yupResolver(ExamSchema()),
+    resolver: yupResolver(QuestionSchema()),
   });
 
   const { errors } = formState;
 
   const queryClient = useQueryClient();
-  useMutation(saveExam, {
+  useMutation(updateQuestion, {
     onSuccess: () => {
-      queryClient.invalidateQueries(["exams-list"]);
+      queryClient.invalidateQueries(["questions-list"]);
     },
   });
 
   const { mutate, isLoading, isError, isSuccess, error } =
-    useMutation(saveExam);
+    useMutation(updateQuestion);
 
   const onSubmit = (data) => {
     console.log("Data", data);
@@ -55,7 +53,7 @@ export default function CreateExam({ setOpenPopup }) {
       )}
       {isSuccess && (
         <NotificationSnackbars
-          message="Exam added successfully"
+          message="Question updated successfully"
           severity="success"
         />
       )}
@@ -69,37 +67,23 @@ export default function CreateExam({ setOpenPopup }) {
         >
           <Stack direction="row">
             <FormInput
-              name="exam_name"
+              name="question_text"
               control={control}
-              label="Exam Name"
+              label="Question Text"
               errors={errors}
+              multiline
+              rows={6}
             />
           </Stack>
 
           <Stack direction="row">
-            <FormInput
-              name="duration_minutes"
+            <FormSelect
+              name="question_type"
               control={control}
-              label="Exam Duration"
+              label="Question Type"
               errors={errors}
-            />
-          </Stack>
-
-          <Stack direction="row">
-            <FormDate
-              name="exam_start"
-              control={control}
-              label="Start Date"
-              errors={errors}
-            />
-          </Stack>
-
-          <Stack direction="row">
-            <FormDate
-              name="exam_end"
-              control={control}
-              label="End Date"
-              errors={errors}
+              options={["Single Choice", "True/False", "Multiple Choice"]}
+              sx={{ minWidth: 320 }}
             />
           </Stack>
 
@@ -114,7 +98,6 @@ export default function CreateExam({ setOpenPopup }) {
           </Button>
         </Box>
       </form>
-      <DevTool control={control} placement="top-left" />
     </>
   );
 }
