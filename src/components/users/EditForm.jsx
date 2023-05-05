@@ -9,6 +9,10 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { DevTool } from "@hookform/devtools";
 import FormInput from "../ui/FormInput";
 import FormSelect from "../ui/FormSelect";
+import { updateUser } from "../../services/user";
+import { useMutation } from "@tanstack/react-query";
+import BackdropLoader from "../ui/Backdrop";
+import NotificationSnackbars from "../ui/Snackbar";
 
 const schema = yup.object({
   firstname: yup.string().required("First Name is required"),
@@ -36,24 +40,38 @@ export default function EditForm({ users, setOpenPopup, singleUser }) {
       academic_year: singleUser.academic_year,
       roles: [{ role_name: singleUser.role_name || "" }],
       isActive: singleUser.isActive,
+      password: singleUser.password,
     },
     resolver: yupResolver(schema),
   });
 
   const { errors } = formState;
 
+  const { mutate, isLoading, isError, isSuccess, error } =
+    useMutation(updateUser);
+
   const onSubmit = (data) => {
     console.log("Data", data);
-    console.log("Users", users);
-    // users.push(data);
-    // users.map((user) => {
-    //   user.id === data.id ? "T" : "F";
-    // });
-    setOpenPopup(false);
+    mutate(data, {
+      onSuccess: () => {
+        setOpenPopup(false);
+      },
+    });
   };
 
   return (
-    <div>
+    <>
+      {isLoading && <BackdropLoader />}
+
+      {isError && (
+        <NotificationSnackbars message={error?.message} severity="error" />
+      )}
+      {isSuccess && (
+        <NotificationSnackbars
+          message="User added successfully"
+          severity="success"
+        />
+      )}
       <form onSubmit={handleSubmit(onSubmit)}>
         <Box
           component="div"
@@ -122,6 +140,6 @@ export default function EditForm({ users, setOpenPopup, singleUser }) {
         </Box>
       </form>
       <DevTool control={control} placement="top-left" />
-    </div>
+    </>
   );
 }

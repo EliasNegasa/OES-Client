@@ -16,15 +16,31 @@ import _ from "lodash";
 import UserForm from "./UserForm";
 import Popup from "../Popup";
 import EditForm from "./EditForm";
+import { getUsers } from "../../services/user";
+import { useQuery } from "@tanstack/react-query";
+import BackdropLoader from "../ui/Backdrop";
+import NotificationSnackbars from "../ui/Snackbar";
+import { Link } from "react-router-dom";
 
 export default function UsersList() {
   const [openPopup, setOpenPopup] = useState(false);
-  const [users, setUsers] = useState(userData);
+  // const [users, setUsers] = useState([]);
   const [singleUser, setSingleUser] = useState("");
 
-  useEffect(() => {
-    setUsers(users);
-  }, users);
+  const {
+    isLoading,
+    data: users,
+    isError,
+    error,
+  } = useQuery(["users-list"], getUsers);
+
+  // useEffect(() => {
+  //   async function fetchUsers() {
+  //     const { data } = await getUsers();
+  //     setUsers(data);
+  //   }
+  //   fetchUsers();
+  // }, []);
 
   const handleEditClicked = (user) => {
     setOpenPopup(true);
@@ -46,7 +62,12 @@ export default function UsersList() {
           Create User
         </Button>
       </Stack>
-
+      <>{isLoading && <BackdropLoader />}</>
+      <>
+        {isError && (
+          <NotificationSnackbars message={error?.message} severity="error" />
+        )}
+      </>
       <TableContainer component={Paper}>
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
           <TableHead sx={{ "*": { fontWeight: 700 } }}>
@@ -61,77 +82,79 @@ export default function UsersList() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {users.map((user) => (
-              <TableRow
-                key={user.id}
-                sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-              >
-                <TableCell component="th" scope="row">
-                  {user.firstname}
-                </TableCell>
-                <TableCell>{user.lastname}</TableCell>
-                <TableCell>{user.email}</TableCell>
-                <TableCell>{user.academic_year}</TableCell>
+            {users &&
+              users?.data.map((user) => (
+                <TableRow
+                  key={user.id}
+                  sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                >
+                  <TableCell component="th" scope="row">
+                    {user.firstname}
+                  </TableCell>
+                  <TableCell>{user.lastname}</TableCell>
+                  <TableCell>{user.email}</TableCell>
+                  <TableCell>{user.academic_year}</TableCell>
 
-                <TableCell>
-                  {user.roles &&
-                    user.roles.map((role) => (
-                      <span key={role.id}>{_.capitalize(role.role_name)}</span>
-                    ))}
-                </TableCell>
-                <TableCell>
-                  {user.isActive == "Active" ? (
-                    <Chip
-                      label="Active"
-                      color="success"
-                      size="small"
-                      sx={{ minWidth: "94px" }}
-                    />
-                  ) : (
-                    <Chip
-                      label="Deactive"
-                      color="warning"
-                      size="small"
-                      sx={{ minWidth: "94px" }}
-                    />
-                  )}
-                </TableCell>
-                <TableCell>
-                  <Stack direction="row">
-                    <Button
-                      // onClick={() => setOpenPopup(true)}
-                      variant="secondary"
-                      sx={{ minWidth: "10px" }}
-                    >
-                      <VisibilityOutlinedIcon
-                        color="action"
-                        sx={{ fontSize: "1rem" }}
+                  <TableCell>
+                    {user.roles &&
+                      user.roles.map((role) => (
+                        <span key={role.id}>
+                          {_.capitalize(role.role_name)}
+                        </span>
+                      ))}
+                  </TableCell>
+                  <TableCell>
+                    {user.isActive == "Active" ? (
+                      <Chip
+                        label="Active"
+                        color="success"
+                        size="small"
+                        sx={{ minWidth: "94px" }}
                       />
-                    </Button>
-                    <Button
-                      onClick={() => handleEditClicked(user)}
-                      variant="secondary"
-                      sx={{ minWidth: "10px" }}
-                    >
-                      <EditOutlinedIcon
+                    ) : (
+                      <Chip
+                        label="Deactive"
                         color="warning"
-                        sx={{ fontSize: "1rem" }}
+                        size="small"
+                        sx={{ minWidth: "94px" }}
                       />
-                    </Button>
-                    <Button
-                      // onClick={() => setOpenPopup(false)}
-                      variant="secondary"
-                      sx={{ minWidth: "10px" }}
-                    >
-                      <DeleteOutlineIcon
-                        color="error"
-                        sx={{ fontSize: "1rem" }}
-                      />
-                    </Button>
-                  </Stack>
-                </TableCell>
-              </TableRow>
-            ))}
+                    )}
+                  </TableCell>
+                  <TableCell>
+                    <Stack direction="row">
+                      <Link to={`/users/${user.id}`}>
+                        <Button variant="secondary" sx={{ minWidth: "10px" }}>
+                          <VisibilityOutlinedIcon
+                            color="action"
+                            sx={{ fontSize: "1rem" }}
+                          />
+                        </Button>
+                      </Link>
+
+                      <Button
+                        onClick={() => handleEditClicked(user)}
+                        variant="secondary"
+                        sx={{ minWidth: "10px" }}
+                      >
+                        <EditOutlinedIcon
+                          color="warning"
+                          sx={{ fontSize: "1rem" }}
+                        />
+                      </Button>
+                      <Button
+                        // onClick={() => handleDetailsClicked(user)}
+                        variant="secondary"
+                        sx={{ minWidth: "10px" }}
+                      >
+                        <DeleteOutlineIcon
+                          color="error"
+                          sx={{ fontSize: "1rem" }}
+                        />
+                      </Button>
+                    </Stack>
+                  </TableCell>
+                </TableRow>
+              ))}
           </TableBody>
         </Table>
       </TableContainer>
@@ -154,176 +177,9 @@ export default function UsersList() {
             setSingleUser={setSingleUser}
           />
         ) : (
-          <UserForm
-            users={users}
-            openPopup={openPopup}
-            setOpenPopup={setOpenPopup}
-          />
+          <UserForm openPopup={openPopup} setOpenPopup={setOpenPopup} />
         )}
       </Popup>
     </>
   );
 }
-
-const userData = [
-  {
-    id: 1,
-    firstname: "test",
-    lastname: "last2",
-    email: "eeea@test.com",
-    password: "$2b$08$kqry/7c0WXybF7GngrFR..xT1V9tD459R0UppjhJ6FZ8YBniGXZIW",
-    academic_year: 2,
-    isActive: "Active",
-    createdAt: "2023-04-14T20:09:00.294Z",
-    updatedAt: "2023-04-18T18:21:31.666Z",
-    roles: [
-      {
-        id: 2,
-        role_name: "admin",
-        createdAt: "2023-04-14T20:08:19.924Z",
-        updatedAt: "2023-04-14T20:08:19.924Z",
-        user_roles: {
-          createdAt: "2023-04-14T20:09:00.417Z",
-          updatedAt: "2023-04-14T20:09:00.417Z",
-          role_id: 2,
-          user_id: 1,
-        },
-      },
-    ],
-    courses: [],
-  },
-  {
-    id: 2,
-    firstname: "test",
-    lastname: "last2",
-    email: "eee@test.com",
-    password: "$2b$08$7hnfcXY6dqfIcRR7mKP2iObzM.cT4mkaA87ED76Wk4eWmgfvpkUrO",
-    academic_year: 1,
-    isActive: "Deactive",
-    createdAt: "2023-04-14T20:13:00.774Z",
-    updatedAt: "2023-04-18T17:10:46.520Z",
-    roles: [
-      {
-        id: 1,
-        role_name: "student",
-        createdAt: "2023-04-14T20:08:19.923Z",
-        updatedAt: "2023-04-14T20:08:19.923Z",
-        user_roles: {
-          createdAt: "2023-04-14T20:13:00.824Z",
-          updatedAt: "2023-04-14T20:13:00.824Z",
-          role_id: 1,
-          user_id: 2,
-        },
-      },
-    ],
-    courses: [
-      {
-        id: 2,
-        course_name: "C++",
-        course_code: "43",
-        course_year: 3,
-        createdAt: "2023-04-14T20:10:30.005Z",
-        updatedAt: "2023-04-14T20:10:30.005Z",
-        course_users: {
-          createdAt: "2023-04-14T20:13:00.827Z",
-          updatedAt: "2023-04-14T20:13:00.827Z",
-          course_id: 2,
-          user_id: 2,
-        },
-      },
-    ],
-  },
-  {
-    id: 3,
-    firstname: "uuu",
-    lastname: "iiii",
-    email: "kkk@test.com",
-    password: "nnnnmmmm",
-    academic_year: 1,
-    isActive: "Active",
-    createdAt: "2023-04-14T20:46:40.739Z",
-    updatedAt: "2023-04-14T20:46:40.739Z",
-    roles: [
-      {
-        id: 2,
-        role_name: "admin",
-        createdAt: "2023-04-14T20:08:19.924Z",
-        updatedAt: "2023-04-14T20:08:19.924Z",
-        user_roles: {
-          createdAt: "2023-04-14T20:46:40.790Z",
-          updatedAt: "2023-04-14T20:46:40.790Z",
-          role_id: 2,
-          user_id: 3,
-        },
-      },
-    ],
-    courses: [
-      {
-        id: 1,
-        course_name: "Java",
-        course_code: "jjjj",
-        course_year: 3,
-        createdAt: "2023-04-14T20:10:22.684Z",
-        updatedAt: "2023-04-25T09:22:48.511Z",
-        course_users: {
-          createdAt: "2023-04-14T20:46:40.797Z",
-          updatedAt: "2023-04-14T20:46:40.797Z",
-          course_id: 1,
-          user_id: 3,
-        },
-      },
-    ],
-  },
-  {
-    id: 6,
-    firstname: "uuu",
-    lastname: "iiii",
-    email: "ewewe@test.com",
-    password: "$2b$08$w/ul75WSC11HsG197jhPmeb/lmK/uLeL1hBrIGzKBlvKjR9R56x8K",
-    academic_year: 1,
-    isActive: "Deactive",
-    createdAt: "2023-04-18T12:08:24.322Z",
-    updatedAt: "2023-04-18T12:08:24.322Z",
-    roles: [],
-    courses: [],
-  },
-  {
-    id: 7,
-    firstname: "test",
-    lastname: "last2",
-    email: "erere@test.com",
-    password: "$2b$08$wR8uvPK69WM0gjMsCy5xeuLxxYC/H6n12xMLupImW/Yy0n.D8TQWO",
-    academic_year: 1,
-    isActive: "Active",
-    createdAt: "2023-04-18T14:17:36.495Z",
-    updatedAt: "2023-04-18T14:17:36.495Z",
-    roles: [],
-    courses: [],
-  },
-  {
-    id: 5,
-    firstname: "uuu",
-    lastname: "iiii",
-    email: "cxc@test.com",
-    password: "wwwwwqe",
-    academic_year: 1,
-    isActive: "Deactive",
-    createdAt: "2023-04-18T12:05:53.731Z",
-    updatedAt: "2023-04-18T12:05:53.731Z",
-    roles: [],
-    courses: [],
-  },
-  {
-    id: 4,
-    firstname: "uuu",
-    lastname: "iiii",
-    email: "hh@test.com",
-    password: "nnnnnnnnn",
-    academic_year: 1,
-    isActive: "Active",
-    createdAt: "2023-04-18T12:02:20.672Z",
-    updatedAt: "2023-04-18T12:02:20.672Z",
-    roles: [],
-    courses: [],
-  },
-];

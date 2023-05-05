@@ -14,13 +14,11 @@ export function getUser(userId) {
 }
 
 export function saveUser(user) {
-  if (user.id) {
-    return http.put(apiEndpoint, user);
-  }
-  // const password = "password@app";
-  // user.append('password', password);
-  // user.password = user.firstName.substring(0, 1).toUpperCase() + user.lastName.substring(0, 1) + "@app"
   return http.post(apiEndpoint, user);
+}
+
+export function updateUser(user) {
+  return http.put(`${apiEndpoint}/${user.id}`, user);
 }
 
 export function deleteUser(userId) {

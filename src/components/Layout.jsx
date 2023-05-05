@@ -14,9 +14,9 @@ import MenuIcon from "@mui/icons-material/Menu";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import SideNav from "./SideNav";
 import { Outlet } from "react-router-dom";
-import Profile from "./Profile";
 import { useTheme } from "@emotion/react";
 import { Stack } from "@mui/material";
+import Profile from "./login/profile";
 
 const drawerWidth = 240;
 

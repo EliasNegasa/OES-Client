@@ -2,20 +2,20 @@ import React, { useState } from "react";
 import BackdropLoader from "../ui/Backdrop";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
-import { Stack, Divider } from "@mui/material";
 import FormInput from "../ui/FormInput";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { useForm, Controller } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { DevTool } from "@hookform/devtools";
-import auth from "../../services/auth";
+import auth, { login } from "../../services/auth";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
-import LoginOutlinedIcon from "@mui/icons-material/LoginOutlined";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import Box from "@mui/material/Box";
 import { Alert } from "@mui/material";
+import useSWR from "swr";
+import { useMutation } from "@tanstack/react-query";
 
 const schema = yup.object({
   password: yup.string().required("Password is required"),
@@ -50,7 +50,6 @@ const LoginForm = () => {
         console.log("CATCH", ex.response.data);
         const { message } = ex.response.data;
         setError(message);
-        // errors.email = "Invalid Username or Password";
       }
     }
   };

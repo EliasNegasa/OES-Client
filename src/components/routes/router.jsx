@@ -8,6 +8,7 @@ import ExamsList from "../exams/ExamsList";
 import AnswersList from "../answers/AnswersList";
 import ResultsList from "../results/ResultsList";
 import Dashboard from "../dashboard.jsx/dashboard";
+import UserDetails from "../users/UserDetails";
 
 const Router = () => {
   return (
@@ -18,6 +19,7 @@ const Router = () => {
         <Route exact path="auth/signin" element={<Navigate to="/" />} />
         <Route path="/courses" element={<CoursesList />} />
         <Route path="/users" element={<UsersList />} />
+        <Route path="users/:userId" element={<UserDetails />} />
         <Route path="/exams" element={<ExamsList />} />
         <Route path="/questions" element={<QuestionsList />} />
         <Route path="/answers" element={<AnswersList />} />

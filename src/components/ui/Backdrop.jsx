@@ -1,17 +1,16 @@
-import React from "react";
+import * as React from "react";
 import Backdrop from "@mui/material/Backdrop";
-import CircularProgress from "@mui/joy/CircularProgress";
+import CircularProgress from "@mui/material/CircularProgress";
 
 export default function BackdropLoader() {
-  const [open, setOpen] = React.useState(false);
-
-  const handleClose = () => {
-    setOpen(true);
-  };
+  const [open, setOpen] = React.useState(true);
 
   return (
     <div>
-      <Backdrop className={classes.backdrop} open={true} onClick={handleClose}>
+      <Backdrop
+        sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        open={open}
+      >
         <CircularProgress color="inherit" />
       </Backdrop>
     </div>

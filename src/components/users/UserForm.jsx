@@ -9,6 +9,10 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { DevTool } from "@hookform/devtools";
 import FormInput from "../ui/FormInput";
 import FormSelect from "../ui/FormSelect";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { saveUser } from "../../services/user";
+import BackdropLoader from "../ui/Backdrop";
+import NotificationSnackbars from "../ui/Snackbar";
 
 const schema = yup.object({
   firstname: yup.string().required("First Name is required"),
@@ -26,7 +30,7 @@ const schema = yup.object({
   isActive: yup.string().required("User Status is required"),
 });
 
-export default function UserForm({ users, setOpenPopup }) {
+export default function UserForm({ setOpenPopup }) {
   const { control, handleSubmit, reset, formState } = useForm({
     defaultValues: {
       firstname: "",
@@ -41,14 +45,39 @@ export default function UserForm({ users, setOpenPopup }) {
 
   const { errors } = formState;
 
+  const queryClient = useQueryClient();
+  useMutation(saveUser, {
+    onSuccess: () => {
+      queryClient.invalidateQueries(["users-list"]);
+    },
+  });
+
+  const { mutate, isLoading, isError, isSuccess, error } =
+    useMutation(saveUser);
+
   const onSubmit = (data) => {
     console.log("Data", data);
-    users.push(data);
-    setOpenPopup(false);
+    mutate(data, {
+      onSuccess: () => {
+        setOpenPopup(false);
+      },
+    });
   };
 
   return (
     <>
+      {isLoading && <BackdropLoader />}
+
+      {isError && (
+        <NotificationSnackbars message={error?.message} severity="error" />
+      )}
+      {isSuccess && (
+        <NotificationSnackbars
+          message="User added successfully"
+          severity="success"
+        />
+      )}
+
       <form onSubmit={handleSubmit(onSubmit)}>
         <Box
           component="div"

@@ -7,14 +7,14 @@ const tokenKey = "token";
 
 http.setJwt(getToken());
 
-export async function login({ email, password }) {
+export const login = async ({ email, password }) => {
   const { data } = await http.post(apiEndpoint, {
     email: email,
     password: password,
   });
-  console.log("RES:", data);
+  console.log("LOG", data);
   localStorage.setItem(tokenKey, data.accessToken);
-}
+};
 
 export function logout() {
   localStorage.removeItem(tokenKey);
