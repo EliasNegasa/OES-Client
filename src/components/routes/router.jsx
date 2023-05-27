@@ -9,12 +9,15 @@ import AnswersList from "../answers/AnswersList";
 import ResultsList from "../results/ResultsList";
 import Dashboard from "../dashboard.jsx/dashboard";
 import UserDetails from "../users/UserDetails";
+import EnrollmentsList from "../enrollments/EnrollmentsList";
+import SingleExam from "../exams/SingleExam";
+import QuizResult from "../quiz/QuizResult";
 
 const Router = () => {
   return (
     <Routes>
       <Route element={<Layout />}>
-        <Route path="/" element={<Dashboard />} />
+        <Route exact path="/" element={<Dashboard />} />
         <Route path="/dashboard" element={<Navigate to="/" />} />
         <Route exact path="auth/signin" element={<Navigate to="/" />} />
         <Route path="/courses" element={<CoursesList />} />
@@ -23,6 +26,12 @@ const Router = () => {
         <Route path="/exams" element={<ExamsList />} />
         <Route path="/questions" element={<QuestionsList />} />
         <Route path="/answers" element={<AnswersList />} />
+        <Route path="/enrollments" element={<EnrollmentsList />} />
+        <Route path="/enrollments/:examId/takequiz" element={<SingleExam />} />
+        <Route
+          path="/enrollments/:examId/your_results"
+          element={<QuizResult />}
+        />
         <Route path="/results" element={<ResultsList />} />
       </Route>
     </Routes>

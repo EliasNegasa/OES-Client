@@ -28,6 +28,7 @@ const SideNav = () => {
           "Questions",
           "Answers",
           "Results",
+          "Enrollments",
           "Monitor Live",
         ].map((text) => (
           <NavLink to={text.toLowerCase()} key={text}>
@@ -53,6 +54,7 @@ const SideNav = () => {
                   {text == "Questions" && <QuizIcon />}
                   {text == "Answers" && <QuestionAnswerIcon />}
                   {text == "Results" && <CreditScoreIcon />}
+                  {text == "Enrollments" && <DescriptionIcon />}
                   {text == "Monitor Live" && <LiveTvIcon />}
                 </ListItemIcon>
                 <ListItemText primary={text} sx={{ color: "#8a9199" }} />

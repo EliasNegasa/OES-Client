@@ -3,11 +3,12 @@ import PropTypes from "prop-types";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import Box from "@mui/material/Box";
+import { Stack, Typography } from "@mui/material";
+import { useParams } from "react-router-dom";
+import CourseDetails from "./details/courseDetails";
 import { useQuery } from "@tanstack/react-query";
 import { getUser } from "../../services/user";
-import { useParams } from "react-router-dom";
 import BackdropLoader from "../ui/Backdrop";
-import { Stack, Typography } from "@mui/material";
 import NotificationSnackbars from "../ui/Snackbar";
 
 function TabPanel(props) {
@@ -45,9 +46,6 @@ function a11yProps(index) {
 export default function UserDetails() {
   const { userId } = useParams();
 
-  const { isLoading, data, isError, error } = useQuery(["user", userId], () =>
-    getUser(userId)
-  );
   const [value, setValue] = React.useState(0);
 
   const handleChange = (event, newValue) => {
@@ -64,26 +62,17 @@ export default function UserDetails() {
           <Tab label="Results" {...a11yProps(2)} />
         </Tabs>
       </Box>
-      <TabPanel value={value} index={0}>
+      <TabPanel value={value} index={0} component="div">
         <Stack spacing={2} direction="row" sx={{ mb: 2 }}>
           <Typography variant="h5" sx={{ fontWeight: 700, flexGrow: 1 }}>
             Personal Details
           </Typography>
         </Stack>
       </TabPanel>
-      <TabPanel value={value} index={1}>
-        <Stack spacing={2} direction="row" sx={{ mb: 2 }}>
-          <Typography variant="h5" sx={{ fontWeight: 700, flexGrow: 1 }}>
-            Courses
-          </Typography>
-        </Stack>
-        {isLoading && <BackdropLoader />}
-        {isError && (
-          <NotificationSnackbars message={error?.message} severity="error" />
-        )}
-        {data && console.log("Data", data)}
+      <TabPanel value={value} index={1} component="div">
+        <CourseDetails userId={userId} />
       </TabPanel>
-      <TabPanel value={value} index={2}>
+      <TabPanel value={value} index={2} component="div">
         <Stack spacing={2} direction="row" sx={{ mb: 2 }}>
           <Typography variant="h5" sx={{ fontWeight: 700, flexGrow: 1 }}>
             Exams
