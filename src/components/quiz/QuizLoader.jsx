@@ -9,6 +9,7 @@ import {
   CardHeader,
   Container,
   Grid,
+  Stack,
   Typography,
 } from "@mui/material";
 import { useForm } from "react-hook-form";
@@ -20,9 +21,12 @@ import BackdropLoader from "../ui/Backdrop";
 import { Link, useNavigate } from "react-router-dom";
 import Popup from "../ui/Popup";
 import _ from "lodash";
+import Timer from "../ui/Timer";
+import Instruction from "./Instruction";
 
 const QuizLoader = ({ questions, exam }) => {
-  const [openPopup, setOpenPopup] = useState(false);
+  const [openPopup, setOpenPopup] = useState(true);
+  const [startTimer, setStartTimer] = useState(false);
   const [result, setResult] = useState({});
   const [amount, setAmount] = useState(0);
   const [correct, setCorrect] = useState([]);
@@ -53,6 +57,11 @@ const QuizLoader = ({ questions, exam }) => {
     }
   );
 
+  const handleStart = () => {
+    setOpenPopup(false);
+    setStartTimer(true);
+  };
+
   const onSubmit = (data) => {
     let score = 0;
     let amount = 0;
@@ -72,8 +81,6 @@ const QuizLoader = ({ questions, exam }) => {
         score++;
 
         correctUserAnswer = _.concat(correctUserAnswer, question.id);
-
-        console.log("C", correctUserAnswer);
       }
     });
     mutate({
@@ -98,13 +105,8 @@ const QuizLoader = ({ questions, exam }) => {
           severity="success"
         />
       )}
-      {isSuccess && (
-        <Link to={`/`}>
-          <Button variant="contained" sx={{ mt: 2, float: "right" }}>
-            Exit Exam
-          </Button>
-        </Link>
-      )}
+      {exam && startTimer && <Timer duration={exam.duration_minutes} />}
+
       <form onSubmit={handleSubmit(onSubmit)}>
         {questions?.map((question) => (
           <Grid
@@ -164,62 +166,95 @@ const QuizLoader = ({ questions, exam }) => {
             Submit Exam
           </Button>
         )}
+        {isSuccess && (
+          <Link to={`/enrollments`}>
+            <Button variant="contained" sx={{ mt: 2, float: "right" }}>
+              Exit Exam
+            </Button>
+          </Link>
+        )}
       </form>
 
-      <Popup openPopup={openPopup} setOpenPopup={setOpenPopup}>
-        <Container component="main">
-          <Grid container alignItems="flex-end">
-            <Grid item sx={{ minWidth: "400px" }}>
-              <Card>
-                <CardHeader
-                  title="Result"
-                  subheader={exam?.exam_name}
-                  titleTypographyProps={{ align: "center" }}
-                  subheaderTypographyProps={{
-                    align: "center",
-                    color: "#fff",
-                  }}
-                  sx={{
-                    backgroundColor: (theme) => theme.palette.primary.main,
-                    color: "#fff",
-                  }}
-                />
-                <CardContent>
-                  <Box
+      {!isSuccess && exam && (
+        <Popup
+          openPopup={openPopup}
+          setOpenPopup={setOpenPopup}
+          title="Instructions"
+        >
+          <Instruction
+            duration={exam.duration_minutes}
+            number={questions.length}
+          />
+          <Stack>
+            <Button
+              variant="contained"
+              onClick={handleStart}
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                padding: "10px",
+              }}
+            >
+              Start
+            </Button>
+          </Stack>
+        </Popup>
+      )}
+      {isSuccess && (
+        <Popup openPopup={openPopup} setOpenPopup={setOpenPopup} title="Result">
+          <Container component="main">
+            <Grid container alignItems="flex-end">
+              <Grid item sx={{ minWidth: "400px" }}>
+                <Card>
+                  <CardHeader
+                    subheader={exam?.exam_name}
+                    titleTypographyProps={{ align: "center" }}
+                    subheaderTypographyProps={{
+                      align: "center",
+                      color: "#fff",
+                    }}
                     sx={{
-                      display: "flex",
-                      justifyContent: "center",
-                      alignItems: "baseline",
-                      mb: 2,
+                      backgroundColor: (theme) => theme.palette.primary.main,
+                      color: "#fff",
                     }}
-                  >
-                    <Typography
-                      component="h2"
-                      variant="h3"
-                      color="text.primary"
+                  />
+                  <CardContent>
+                    <Box
+                      sx={{
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "baseline",
+                        mb: 2,
+                      }}
                     >
-                      {result.score}
-                    </Typography>
-                    <Typography variant="h6" color="text.secondary">
-                      /{amount}
-                    </Typography>
-                  </Box>
-                </CardContent>
-                <CardActions>
-                  <Button
-                    fullWidth
-                    onClick={() => {
-                      setOpenPopup(false);
-                    }}
-                  >
-                    View Answers
-                  </Button>
-                </CardActions>
-              </Card>
+                      <Typography
+                        component="h2"
+                        variant="h3"
+                        color="text.primary"
+                      >
+                        {result.score}
+                      </Typography>
+                      <Typography variant="h6" color="text.secondary">
+                        /{amount}
+                      </Typography>
+                    </Box>
+                  </CardContent>
+                  <CardActions>
+                    <Button
+                      fullWidth
+                      onClick={() => {
+                        setOpenPopup(false);
+                      }}
+                    >
+                      View Answers
+                    </Button>
+                  </CardActions>
+                </Card>
+              </Grid>
             </Grid>
-          </Grid>
-        </Container>
-      </Popup>
+          </Container>
+        </Popup>
+      )}
     </>
   );
 };
