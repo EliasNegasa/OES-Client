@@ -16,6 +16,7 @@ import Box from "@mui/material/Box";
 import { Alert } from "@mui/material";
 import useSWR from "swr";
 import { useMutation } from "@tanstack/react-query";
+import { Navigate } from "react-router-dom";
 
 const schema = yup.object({
   password: yup.string().required("Password is required"),
@@ -42,6 +43,7 @@ const LoginForm = () => {
     try {
       await auth.login(data);
       window.location = "/";
+      // Navigate("/");
     } catch (ex) {
       if (
         ex.response &&

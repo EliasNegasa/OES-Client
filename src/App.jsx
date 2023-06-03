@@ -1,12 +1,16 @@
-import { useEffect, useState } from "react";
+import { createContext, useEffect, useState } from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import { ReactNotifications } from "react-notifications-component";
 import Router from "./components/routes/router";
-import { getUsers } from "./services/user";
-import auth from "./services/auth";
+import { getUser, getUsers } from "./services/user";
+import auth, { getCurrentUser } from "./services/auth";
 import LoginForm from "./components/login/LoginForm";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import {
+  QueryClient,
+  QueryClientProvider,
+  useQuery,
+} from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 const theme = createTheme({
@@ -32,16 +36,24 @@ const theme = createTheme({
   },
 });
 
-const queryClient = new QueryClient();
+export const CurrentUserContext = createContext(null);
 
 function App() {
   const [user, setUser] = useState();
   const [expired, setExpired] = useState(false);
 
+  const {
+    isLoading,
+    data: currentUser,
+    isError,
+    error,
+  } = useQuery(["current-user", user?.id], () => getUser(user?.id));
+
   useEffect(() => {
     const user = auth.getCurrentUser();
 
     if (user) {
+      console.log("CURRENT USER", user);
       if (Date.now() >= user.exp * 1000) {
         console.log("EXPIRED");
         setExpired({ expired: true });
@@ -57,18 +69,16 @@ function App() {
   }, []);
 
   return (
-    <QueryClientProvider client={queryClient}>
+    <>
       <ThemeProvider theme={theme}>
         <>
-          <ReactNotifications />
-          {!user && (
+          {!currentUser && (
             <Routes>
               <Route path="*" element={<Navigate to="auth/signin" replace />} />
               <Route exact path="auth/signin" element={<LoginForm />} />
             </Routes>
           )}
-
-          {user && (
+          {currentUser && (
             <>
               {expired ? (
                 <>
@@ -83,9 +93,10 @@ function App() {
                 </>
               ) : (
                 <>
-                  {console.log("ROUTER")}
-
-                  <Router />
+                  {console.log("ROUTER", currentUser)}
+                  <CurrentUserContext.Provider value={currentUser?.data}>
+                    <Router />
+                  </CurrentUserContext.Provider>
                 </>
               )}
             </>
@@ -93,7 +104,7 @@ function App() {
         </>
       </ThemeProvider>
       <ReactQueryDevtools initialIsOpen={false} position="bottom right" />
-    </QueryClientProvider>
+    </>
   );
 }
 
