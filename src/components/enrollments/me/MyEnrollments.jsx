@@ -6,44 +6,50 @@ import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import { Grid, Stack } from "@mui/material";
 import StickyNote2OutlinedIcon from "@mui/icons-material/StickyNote2Outlined";
-import ParseDate from "../../utils/parseDate";
-import BackdropLoader from "../ui/Backdrop";
-import NotificationSnackbars from "../ui/Snackbar";
+import ParseDate from "../../../utils/parseDate";
+import BackdropLoader from "../../ui/Backdrop";
+import NotificationSnackbars from "../../ui/Snackbar";
 import { useQuery } from "@tanstack/react-query";
-import { getEnrollments } from "../../services/enrollment";
+import { filterEnrollments } from "../../../services/enrollment";
 import { Link } from "react-router-dom";
 import Chip from "@mui/material/Chip";
+import QuizResult from "../../quiz/QuizResult";
+import { filterResults } from "../../../services/results";
 
-export default function EnrollmentsList() {
+export default function MyEnrollments({ userId }) {
   const [openPopup, setOpenPopup] = useState(false);
   const [enrollment, setEnrollment] = useState("");
+  const [resultId, setResultId] = useState(null);
 
   const {
     isLoading,
     data: enrollments,
     isError,
     error,
-  } = useQuery(["enrollments-list"], getEnrollments);
+  } = useQuery(["user-enrollments-list", userId], () =>
+    filterEnrollments(`user_id=${userId}`)
+  );
 
-  const handleCreateClicked = () => {
-    setEnrollment("");
+  const { data: results, refetch } = useQuery(
+    ["user-results-list", resultId],
+    () => filterResults(`enrollment_id=${resultId}`)
+  );
+
+  const handleResultClicked = (id) => {
+    setResultId(id);
+    refetch();
+    // console.log("Result Clicked", id);
+    // setResult(true);
     setOpenPopup(true);
   };
 
   return (
     <>
-      {console.log("ENROLLMENTS", enrollments?.data)}
+      {console.log("RESULT VIEW", results?.data)}
       <Stack spacing={2} direction="row" sx={{ mb: 2 }}>
         <Typography variant="h5" sx={{ fontWeight: 700, flexGrow: 1 }}>
-          Enrollments
+          Enrolled Exams
         </Typography>
-        <Button
-          variant="contained"
-          onClick={handleCreateClicked}
-          startIcon={<StickyNote2OutlinedIcon />}
-        >
-          Create Enrollment
-        </Button>
       </Stack>
 
       <>{isLoading && <BackdropLoader />}</>
@@ -100,11 +106,12 @@ export default function EnrollmentsList() {
                         <Button variant="outlined">Take Exam</Button>
                       </Link>
                     ) : (
-                      <Link
-                        to={`/enrollments/${enrollment.exam_id}/your_results`}
+                      <Button
+                        variant="outlined"
+                        onClick={() => handleResultClicked(enrollment.id)}
                       >
-                        <Button variant="outlined">View Result</Button>
-                      </Link>
+                        View Result
+                      </Button>
                     )}
                   </Stack>
                 </Box>
@@ -112,6 +119,16 @@ export default function EnrollmentsList() {
             </Grid>
           ))}
       </Grid>
+      {resultId && (
+        <QuizResult
+          exam_name={enrollment?.course?.course_name}
+          score={results?.data[0].score}
+          amount={results?.data[0].status}
+          openPopup={openPopup}
+          setOpenPopup={setOpenPopup}
+          status={false}
+        />
+      )}
     </>
   );
 }

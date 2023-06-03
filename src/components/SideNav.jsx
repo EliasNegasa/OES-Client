@@ -16,82 +16,88 @@ import { useTheme } from "@emotion/react";
 import { useContext } from "react";
 import { CurrentUserContext } from "../App";
 
-const Navs = [
-  {
-    label: "Dashboard",
-    type: "all",
-    url: "/dashboard",
-    icon: <DashboardIcon />,
-  },
-  {
-    label: "My Dashboard",
-    type: "student",
-    url: "/me/dashboard",
-    icon: <DashboardIcon />,
-  },
-  { label: "Users", type: "admin", url: "/users", icon: <PeopleOutlineIcon /> },
-  {
-    label: "Personal Info.",
-    type: "student",
-    url: "/me/users",
-    icon: <PeopleOutlineIcon />,
-  },
-  {
-    label: "Courses",
-    type: "all",
-    url: "/courses",
-    icon: <AutoStoriesIcon />,
-  },
-  {
-    label: "My Courses",
-    type: "student",
-    url: "/me/courses",
-    icon: <AutoStoriesIcon />,
-  },
-  { label: "Exams", type: "admin", url: "/exams", icon: <DescriptionIcon /> },
-  {
-    label: "My Exams",
-    type: "student",
-    url: "/me/exams",
-    icon: <DescriptionIcon />,
-  },
-  { label: "Questions", type: "admin", url: "questions", icon: <QuizIcon /> },
-  {
-    label: "Answers",
-    type: "admin",
-    url: "/answers",
-    icon: <QuestionAnswerIcon />,
-  },
-  {
-    label: "Enrollments",
-    type: "admin",
-    url: "/enrollments",
-    icon: <DescriptionIcon />,
-  },
-  {
-    label: "My Enrollments",
-    type: "student",
-    url: "me/enrollments",
-    icon: <DescriptionIcon />,
-  },
-  {
-    label: "Monitor-Live",
-    type: "admin",
-    url: "/monitor-live",
-    icon: <LiveTvIcon />,
-  },
-  {
-    label: "My Results",
-    type: "student",
-    url: "/me/results",
-    icon: <CreditScoreIcon />,
-  },
-];
-
 const SideNav = () => {
   const theme = useTheme();
   const currentUser = useContext(CurrentUserContext);
   const role = currentUser.roles[0].role_name;
+  const userId = currentUser.id;
+
+  const Navs = [
+    {
+      label: "Dashboard",
+      type: "all",
+      url: "/dashboard",
+      icon: <DashboardIcon />,
+    },
+    {
+      label: "My Dashboard",
+      type: "student",
+      url: "/me/dashboard",
+      icon: <DashboardIcon />,
+    },
+    {
+      label: "Users",
+      type: "admin",
+      url: "/users",
+      icon: <PeopleOutlineIcon />,
+    },
+    {
+      label: "Personal Info.",
+      type: "student",
+      url: `/me/users/${userId}`,
+      icon: <PeopleOutlineIcon />,
+    },
+    {
+      label: "Courses",
+      type: "all",
+      url: "/courses",
+      icon: <AutoStoriesIcon />,
+    },
+    {
+      label: "My Courses",
+      type: "student",
+      url: `/me/courses/${userId}`,
+      icon: <AutoStoriesIcon />,
+    },
+    { label: "Exams", type: "admin", url: "/exams", icon: <DescriptionIcon /> },
+    // {
+    //   label: "My Exams",
+    //   type: "student",
+    //   url: `/me/exams/${userId}`,
+    //   icon: <DescriptionIcon />,
+    // },
+    { label: "Questions", type: "admin", url: "questions", icon: <QuizIcon /> },
+    {
+      label: "Answers",
+      type: "admin",
+      url: "/answers",
+      icon: <QuestionAnswerIcon />,
+    },
+    {
+      label: "Enrollments",
+      type: "admin",
+      url: "/enrollments",
+      icon: <DescriptionIcon />,
+    },
+    {
+      label: "My Enrollments",
+      type: "student",
+      url: `/me/enrollments/${userId}`,
+      icon: <DescriptionIcon />,
+    },
+    {
+      label: "Monitor-Live",
+      type: "admin",
+      url: "/monitor-live",
+      icon: <LiveTvIcon />,
+    },
+    // {
+    //   label: "My Results",
+    //   type: "student",
+    //   url: "/me/results",
+    //   icon: <CreditScoreIcon />,
+    // },
+  ];
 
   return (
     <>

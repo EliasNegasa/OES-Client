@@ -23,6 +23,10 @@ import Popup from "../ui/Popup";
 import _ from "lodash";
 import Timer from "../ui/Timer";
 import Instruction from "./Instruction";
+import { updateEnrollment } from "../../services/enrollment";
+import { useContext } from "react";
+import { CurrentUserContext } from "../../App";
+import QuizResult from "./QuizResult";
 
 const QuizLoader = ({ questions, exam }) => {
   const [openPopup, setOpenPopup] = useState(true);
@@ -30,12 +34,10 @@ const QuizLoader = ({ questions, exam }) => {
   const [result, setResult] = useState({});
   const [amount, setAmount] = useState(0);
   const [correct, setCorrect] = useState([]);
-
-  const navigate = useNavigate();
+  const currentUser = useContext(CurrentUserContext);
 
   const { control, handleSubmit, reset, formState } = useForm({
     defaultValues: {},
-    // resolver: yupResolver(QuestionSchema()),
   });
 
   const { errors, isDirty } = formState;
@@ -52,10 +54,12 @@ const QuizLoader = ({ questions, exam }) => {
         console.log("IN MUTATION", data);
         setResult(data.data);
         setOpenPopup(true);
-        // navigate(`enrollments/${exam.enrollment_id}/your_results`);
       },
     }
   );
+
+  const { data: enroll, mutate: mutateEnrollment } =
+    useMutation(updateEnrollment);
 
   const handleStart = () => {
     setOpenPopup(false);
@@ -68,7 +72,6 @@ const QuizLoader = ({ questions, exam }) => {
     let correctUserAnswer = [];
 
     setAmount(0);
-    console.log("DATAA", data);
 
     // calculate score
     questions.forEach((question) => {
@@ -76,7 +79,6 @@ const QuizLoader = ({ questions, exam }) => {
       const correctAnswer = question.answers.find(
         (answer) => answer.is_correct
       );
-      console.log("CORRECT ANSWERS", correctAnswer);
       if (data[`question_${question.id}`] === correctAnswer.answer_text) {
         score++;
 
@@ -87,7 +89,14 @@ const QuizLoader = ({ questions, exam }) => {
       score: score,
       exam_id: exam.id,
       enrollment_id: exam.enrollment_id,
+      status: amount,
     });
+
+    mutateEnrollment({
+      id: exam.enrollment_id,
+      status: "taken",
+    });
+
     setAmount(amount);
     setCorrect(correctUserAnswer);
   };
@@ -105,7 +114,9 @@ const QuizLoader = ({ questions, exam }) => {
           severity="success"
         />
       )}
-      {exam && startTimer && <Timer duration={exam.duration_minutes} />}
+      {exam && startTimer && !isSuccess && (
+        <Timer duration={exam.duration_minutes} />
+      )}
 
       <form onSubmit={handleSubmit(onSubmit)}>
         {questions?.map((question) => (
@@ -167,7 +178,7 @@ const QuizLoader = ({ questions, exam }) => {
           </Button>
         )}
         {isSuccess && (
-          <Link to={`/enrollments`}>
+          <Link to={`/me/enrollments/${currentUser.id}`}>
             <Button variant="contained" sx={{ mt: 2, float: "right" }}>
               Exit Exam
             </Button>
@@ -201,59 +212,13 @@ const QuizLoader = ({ questions, exam }) => {
         </Popup>
       )}
       {isSuccess && (
-        <Popup openPopup={openPopup} setOpenPopup={setOpenPopup} title="Result">
-          <Container component="main">
-            <Grid container alignItems="flex-end">
-              <Grid item sx={{ minWidth: "400px" }}>
-                <Card>
-                  <CardHeader
-                    subheader={exam?.exam_name}
-                    titleTypographyProps={{ align: "center" }}
-                    subheaderTypographyProps={{
-                      align: "center",
-                      color: "#fff",
-                    }}
-                    sx={{
-                      backgroundColor: (theme) => theme.palette.primary.main,
-                      color: "#fff",
-                    }}
-                  />
-                  <CardContent>
-                    <Box
-                      sx={{
-                        display: "flex",
-                        justifyContent: "center",
-                        alignItems: "baseline",
-                        mb: 2,
-                      }}
-                    >
-                      <Typography
-                        component="h2"
-                        variant="h3"
-                        color="text.primary"
-                      >
-                        {result.score}
-                      </Typography>
-                      <Typography variant="h6" color="text.secondary">
-                        /{amount}
-                      </Typography>
-                    </Box>
-                  </CardContent>
-                  <CardActions>
-                    <Button
-                      fullWidth
-                      onClick={() => {
-                        setOpenPopup(false);
-                      }}
-                    >
-                      View Answers
-                    </Button>
-                  </CardActions>
-                </Card>
-              </Grid>
-            </Grid>
-          </Container>
-        </Popup>
+        <QuizResult
+          exam_name={exam?.exam_name}
+          score={result.score}
+          amount={amount}
+          openPopup={openPopup}
+          setOpenPopup={setOpenPopup}
+        />
       )}
     </>
   );

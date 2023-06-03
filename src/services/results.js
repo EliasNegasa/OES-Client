@@ -25,6 +25,7 @@ export function deleteResult(resultId) {
   return http.delete(`${apiEndpoint}/${resultId}`);
 }
 
-// export function filterResults(query) {
-//   return http.get(`${apiEndpoint}/${query}`);
-// }
+export function filterResults(query) {
+  console.log("FILTER FUNCTION");
+  return http.get(`${apiEndpoint}/search?${query}`);
+}

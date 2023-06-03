@@ -25,6 +25,6 @@ export function deleteCourse(courseId) {
   return http.delete(`${apiEndpoint}/${courseId}`);
 }
 
-// export function filterCourses(query) {
-//   return http.get(`${apiEndpoint}/${query}`);
-// }
+export function filterCourses(query) {
+  return http.get(`${apiEndpoint}/search?${query}`);
+}
