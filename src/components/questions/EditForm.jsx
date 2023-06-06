@@ -22,15 +22,15 @@ export default function EditQuestion({ question, setOpenPopup }) {
       id: question.id,
       question_text: question.question_text,
       question_type: question.question_type || "",
-      answers: [
-        question.answers &&
-          question.answers.map((answer) => {
-            return {
-              answer_text: answer.answer_text,
-              is_correct: answer.is_correct,
-            };
-          }),
-      ],
+      // answers: [
+      //   question.answers &&
+      //     question.answers.map((answer) => {
+      //       return {
+      //         answer_text: answer.answer_text,
+      //         is_correct: answer.is_correct,
+      //       };
+      //     }),
+      // ],
     },
     resolver: yupResolver(QuestionSchema()),
   });
@@ -104,12 +104,16 @@ export default function EditQuestion({ question, setOpenPopup }) {
               control={control}
               label="Question Type"
               errors={errors}
-              options={["Single Choice", "True/False", "Multiple Choice"]}
+              options={[
+                ["Single Choice", "Single Choice"],
+                ["True/False", "True/False"],
+                ["Multiple Choice", "Multiple Choice"],
+              ]}
               sx={{ minWidth: 400 }}
             />
           </Stack>
 
-          {fields.map((field, index) => {
+          {/* {fields.map((field, index) => {
             return (
               <Stack>
                 <Stack direction="row" key={field.id}>
@@ -139,7 +143,7 @@ export default function EditQuestion({ question, setOpenPopup }) {
                 />
               </Stack>
             );
-          })}
+          })} */}
 
           <Stack direction="row" sx={{ justifyContent: "flex-end" }}>
             <Button

@@ -16,10 +16,14 @@ import RadioButtonCheckedOutlinedIcon from "@mui/icons-material/RadioButtonCheck
 import { getQuestions } from "../../services/questions";
 import CreateQuestion from "./CreateQuestion";
 import EditQuestion from "./EditForm";
+import AssignExam from "./AssignExam";
+import { getExams } from "../../services/exam";
 
 const QuestionsList = () => {
   const [openPopup, setOpenPopup] = useState(false);
   const [question, setQuestion] = useState("");
+  const [questionId, setQuestionId] = useState(null);
+  const [assignExam, setAssignExam] = useState(false);
 
   const {
     isLoading,
@@ -27,6 +31,8 @@ const QuestionsList = () => {
     isError,
     error,
   } = useQuery(["questions-list"], getQuestions);
+
+  const { data: exams } = useQuery(["exams-list"], getExams);
 
   const handleEditClicked = (question) => {
     setOpenPopup(true);
@@ -36,7 +42,16 @@ const QuestionsList = () => {
 
   const handleCreateClicked = () => {
     setQuestion("");
+    setAssignExam(false);
     setOpenPopup(true);
+  };
+
+  const handleAssignExamClicked = (id) => {
+    setQuestionId(id);
+    setQuestion("");
+    setAssignExam(true);
+    setOpenPopup(true);
+    console.log("ID", id);
   };
 
   return (
@@ -74,17 +89,21 @@ const QuestionsList = () => {
                   }}
                 >
                   <CardContent sx={{ flex: "1 0 auto" }}>
-                    <Chip
-                      label={
-                        question.exam
-                          ? question.exam.exam_name
-                          : "No exam assigned"
-                      }
-                      color={question.exam ? "success" : "error"}
-                      variant="outlined"
-                      size="small"
-                      sx={{ mb: "10px" }}
-                    />
+                    <Button
+                      onClick={() => handleAssignExamClicked(question.id)}
+                    >
+                      <Chip
+                        label={
+                          question.exam
+                            ? question.exam.exam_name
+                            : "No exam assigned"
+                        }
+                        color={question.exam ? "success" : "error"}
+                        variant="outlined"
+                        size="small"
+                        sx={{ mb: "10px" }}
+                      />
+                    </Button>
                     <Typography component="div" variant="p">
                       {question.question_text}
                     </Typography>
@@ -150,6 +169,8 @@ const QuestionsList = () => {
         title={
           question
             ? "Update Question Information"
+            : assignExam
+            ? "Assign Exam"
             : "Enter Question Information"
         }
       >
@@ -160,7 +181,20 @@ const QuestionsList = () => {
             question={question}
           />
         ) : (
-          <CreateQuestion openPopup={openPopup} setOpenPopup={setOpenPopup} />
+          <>
+            {assignExam ? (
+              <AssignExam
+                exams={exams}
+                questionId={questionId}
+                setOpenPopup={setOpenPopup}
+              />
+            ) : (
+              <CreateQuestion
+                openPopup={openPopup}
+                setOpenPopup={setOpenPopup}
+              />
+            )}
+          </>
         )}
       </Popup>
     </>

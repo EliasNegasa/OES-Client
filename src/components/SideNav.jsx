@@ -8,8 +8,8 @@ import AutoStoriesIcon from "@mui/icons-material/AutoStories";
 import QuizIcon from "@mui/icons-material/Quiz";
 import DescriptionIcon from "@mui/icons-material/Description";
 import QuestionAnswerIcon from "@mui/icons-material/QuestionAnswer";
-import CreditScoreIcon from "@mui/icons-material/CreditScore";
 import DashboardIcon from "@mui/icons-material/Dashboard";
+import CreditScoreOutlinedIcon from "@mui/icons-material/CreditScoreOutlined";
 import LiveTvIcon from "@mui/icons-material/LiveTv";
 import { NavLink } from "react-router-dom";
 import { useTheme } from "@emotion/react";
@@ -25,78 +25,88 @@ const SideNav = () => {
   const Navs = [
     {
       label: "Dashboard",
-      type: "all",
+      type: ["admin", "lecturer"],
       url: "/dashboard",
       icon: <DashboardIcon />,
     },
     {
       label: "My Dashboard",
-      type: "student",
+      type: ["student"],
       url: "/me/dashboard",
       icon: <DashboardIcon />,
     },
     {
       label: "Users",
-      type: "admin",
+      type: ["admin"],
       url: "/users",
       icon: <PeopleOutlineIcon />,
     },
     {
       label: "Personal Info.",
-      type: "student",
+      type: ["student"],
       url: `/me/users/${userId}`,
       icon: <PeopleOutlineIcon />,
     },
     {
       label: "Courses",
-      type: "all",
+      type: ["all"],
       url: "/courses",
       icon: <AutoStoriesIcon />,
     },
     {
       label: "My Courses",
-      type: "student",
+      type: ["student"],
       url: `/me/courses/${userId}`,
       icon: <AutoStoriesIcon />,
     },
-    { label: "Exams", type: "admin", url: "/exams", icon: <DescriptionIcon /> },
+    {
+      label: "Exams",
+      type: ["admin", "lecturer"],
+      url: "/exams",
+      icon: <DescriptionIcon />,
+    },
     // {
     //   label: "My Exams",
     //   type: "student",
     //   url: `/me/exams/${userId}`,
     //   icon: <DescriptionIcon />,
     // },
-    { label: "Questions", type: "admin", url: "questions", icon: <QuizIcon /> },
+    {
+      label: "Questions",
+      type: ["admin", "lecturer"],
+      url: "questions",
+      icon: <QuizIcon />,
+    },
     {
       label: "Answers",
-      type: "admin",
+      type: ["admin", "lecturer"],
       url: "/answers",
       icon: <QuestionAnswerIcon />,
     },
     {
       label: "Enrollments",
-      type: "admin",
+      type: ["admin", "lecturer"],
       url: "/enrollments",
       icon: <DescriptionIcon />,
     },
     {
       label: "My Enrollments",
-      type: "student",
+      type: ["student"],
       url: `/me/enrollments/${userId}`,
       icon: <DescriptionIcon />,
     },
     {
+      label: "Results",
+      type: ["admin", "lecturer"],
+      url: "/results",
+      icon: <CreditScoreOutlinedIcon />,
+    },
+    {
       label: "Monitor-Live",
-      type: "admin",
+      type: ["admin"],
       url: "/monitor-live",
       icon: <LiveTvIcon />,
     },
-    // {
-    //   label: "My Results",
-    //   type: "student",
-    //   url: "/me/results",
-    //   icon: <CreditScoreIcon />,
-    // },
   ];
 
   return (
@@ -105,7 +115,7 @@ const SideNav = () => {
       <List>
         {Navs.map(
           (nav) =>
-            role === nav.type && (
+            nav.type.includes(role) && (
               <NavLink to={nav.url} key={nav.label}>
                 <ListItem disablePadding sx={{ display: "block" }}>
                   <ListItemButton

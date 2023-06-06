@@ -8,14 +8,14 @@ import {
   FormControl,
 } from "@mui/material";
 
-const FormSelect = ({ name, control, label, options, ...rest }) => {
+const FormSelect = ({ name, control, label, options, minWidth, ...rest }) => {
   return (
     <Stack direction="column">
       <Controller
         name={name}
         control={control}
         render={({ field }) => (
-          <FormControl sx={{ m: 1, minWidth: 250 }}>
+          <FormControl sx={{ m: 1, minWidth: minWidth ? minWidth : 250 }}>
             <InputLabel id={label}>{label}</InputLabel>
             <Select
               id={label}
@@ -24,9 +24,10 @@ const FormSelect = ({ name, control, label, options, ...rest }) => {
               labelId={label}
               {...rest}
             >
+              {console.log("OPTIONS", options)}
               {options.map((option) => (
-                <MenuItem value={option} key={option}>
-                  {option}
+                <MenuItem value={option[0]} key={option[0]}>
+                  {option[1]}
                 </MenuItem>
               ))}
             </Select>

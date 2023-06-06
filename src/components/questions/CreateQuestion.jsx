@@ -21,7 +21,7 @@ export default function CreateQuestion({ setOpenPopup }) {
     defaultValues: {
       question_text: "",
       question_type: "",
-      answers: [{ answer_text: "", is_correct: true }],
+      answers: [{ answer_text: "", is_correct: false }],
     },
     resolver: yupResolver(QuestionSchema()),
   });
@@ -95,7 +95,11 @@ export default function CreateQuestion({ setOpenPopup }) {
               control={control}
               label="Question Type"
               errors={errors}
-              options={["Single Choice", "True/False", "Multiple Choice"]}
+              options={[
+                ["Single Choice", "Single Choice"],
+                ["True/False", "True/False"],
+                ["Multiple Choice", "Multiple Choice"],
+              ]}
               sx={{ minWidth: 400 }}
             />
           </Stack>
@@ -127,6 +131,7 @@ export default function CreateQuestion({ setOpenPopup }) {
                   label={"Correct Answer"}
                   errors={errors}
                   sx={{ ml: "10px" }}
+                  defaultChecked={false}
                 />
               </Stack>
             );

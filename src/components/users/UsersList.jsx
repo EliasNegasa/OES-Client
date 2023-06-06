@@ -31,7 +31,7 @@ export default function UsersList() {
     data: users,
     isError,
     error,
-  } = useQuery(["users-list"], getUsers);
+  } = useQuery(["users-list"], getUsers, { enabled: true });
 
   const handleEditClicked = (user) => {
     setOpenPopup(true);
@@ -95,7 +95,7 @@ export default function UsersList() {
                     {user.roles &&
                       user.roles.map((role) => (
                         <span key={role.id}>
-                          {_.capitalize(role.role_name)}
+                          {_.capitalize(role.role_name)}&nbsp;
                         </span>
                       ))}
                   </TableCell>
@@ -134,16 +134,6 @@ export default function UsersList() {
                       >
                         <EditOutlinedIcon
                           color="warning"
-                          sx={{ fontSize: "1rem" }}
-                        />
-                      </Button>
-                      <Button
-                        // onClick={() => handleDetailsClicked(user)}
-                        variant="secondary"
-                        sx={{ minWidth: "10px" }}
-                      >
-                        <DeleteOutlineIcon
-                          color="error"
                           sx={{ fontSize: "1rem" }}
                         />
                       </Button>

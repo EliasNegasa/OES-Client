@@ -5,34 +5,28 @@ import SaveOutlinedIcon from "@mui/icons-material/SaveOutlined";
 import { Box, Divider, Stack } from "@mui/material";
 import _ from "lodash";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { DevTool } from "@hookform/devtools";
 import FormInput from "../ui/FormInput";
 import FormSelect from "../ui/FormSelect";
-import { updateUser } from "../../services/user";
 import { useMutation } from "@tanstack/react-query";
 import BackdropLoader from "../ui/Backdrop";
 import NotificationSnackbars from "../ui/Snackbar";
-import UserSchema from "../../validations/user";
+import AnswerSchema from "../../validations/answer";
+import { updateAnswer } from "../../services/answer";
 
-export default function EditForm({ setOpenPopup, user }) {
+export default function EditAnswer({ setOpenPopup, answer }) {
   const { control, handleSubmit, reset, formState } = useForm({
     defaultValues: {
-      id: user.id,
-      firstname: user.firstname,
-      lastname: user.lastname,
-      email: user.email,
-      academic_year: user.academic_year,
-      roles: [{ role_name: user.role_name || "" }],
-      isActive: user.isActive,
-      password: user.password,
+      id: answer.id,
+      answer_text: answer.answer_text,
+      is_correct: answer.is_correct,
     },
-    resolver: yupResolver(UserSchema()),
+    resolver: yupResolver(AnswerSchema()),
   });
 
   const { errors } = formState;
 
   const { mutate, isLoading, isError, isSuccess, error } =
-    useMutation(updateUser);
+    useMutation(updateAnswer);
 
   const onSubmit = (data) => {
     console.log("Data", data);
@@ -52,7 +46,7 @@ export default function EditForm({ setOpenPopup, user }) {
       )}
       {isSuccess && (
         <NotificationSnackbars
-          message="User updated successfully"
+          message="Answer updated successfully"
           severity="success"
         />
       )}
@@ -60,77 +54,44 @@ export default function EditForm({ setOpenPopup, user }) {
         <Box
           component="div"
           sx={{
-            "& .MuiTextField-root": { m: 1, width: "25ch" },
+            "& .MuiTextField-root": { m: 1, width: "35ch" },
           }}
         >
           <Stack direction="row">
             <FormInput
-              name="firstname"
+              name="answer_text"
               control={control}
-              label="First Name"
+              label="Answer Text"
               errors={errors}
-            />
-
-            <FormInput
-              name="lastname"
-              control={control}
-              label="Last Name"
-              errors={errors}
+              multiline
+              rows={6}
             />
           </Stack>
-
-          <Stack direction="row">
-            <FormInput
-              name="email"
-              control={control}
-              label="Email Address"
-              errors={errors}
-            />
-
-            <FormInput
-              name="academic_year"
-              control={control}
-              label="Academic year"
-              errors={errors}
-            />
-          </Stack>
-
           <Stack direction="row">
             <FormSelect
-              name="roles[0].role_name"
+              name="is_correct"
               control={control}
-              label="Role"
+              label="Correct Answer"
               options={[
-                ["Student", "Student"],
-                ["Admin", "Admin"],
-                ["Lecturer", "Lecturer"],
+                ["True", "True"],
+                ["False", "False"],
               ]}
               errors={errors}
-            />
-
-            <FormSelect
-              name="isActive"
-              control={control}
-              label="Status"
-              options={[
-                ["Active", "Active"],
-                ["Deactive", "Deactive"],
-              ]}
-              errors={errors}
+              minWidth={350}
             />
           </Stack>
+
           <Divider sx={{ marginTop: "10px", marginBottom: "10px" }} />
           <Button
             variant="contained"
             type="submit"
             startIcon={<SaveOutlinedIcon />}
-            sx={{ float: "right", right: "25px" }}
+            sx={{ float: "right", right: "5px" }}
           >
             Save
           </Button>
         </Box>
       </form>
-      <DevTool control={control} placement="top-left" />
     </>
   );
 }

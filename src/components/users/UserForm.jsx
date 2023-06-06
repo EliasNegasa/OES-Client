@@ -106,7 +106,11 @@ export default function UserForm({ setOpenPopup }) {
               name="roles[0].role_name"
               control={control}
               label="Role"
-              options={["Student", "Admin", "Lecturer"]}
+              options={[
+                ["Student", "Student"],
+                ["Admin", "Admin"],
+                ["Lecturer", "Lecturer"],
+              ]}
               errors={errors}
             />
 
@@ -114,7 +118,10 @@ export default function UserForm({ setOpenPopup }) {
               name="isActive"
               control={control}
               label="Status"
-              options={["Active", "Deactive"]}
+              options={[
+                ["Active", "Active"],
+                ["Deactive", "Deactive"],
+              ]}
               errors={errors}
             />
           </Stack>
