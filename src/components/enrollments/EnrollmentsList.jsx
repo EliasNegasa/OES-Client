@@ -18,10 +18,13 @@ import Popup from "../ui/Popup";
 import { getExams } from "../../services/exam";
 import { getCourses } from "../../services/course";
 import { getUsers } from "../../services/user";
+import { CurrentUserContext } from "../../App";
 
 export default function EnrollmentsList() {
   const [openPopup, setOpenPopup] = useState(false);
   const [enrollment, setEnrollment] = useState("");
+  const currentUser = React.useContext(CurrentUserContext);
+  const role = currentUser.roles[0].role_name;
 
   const {
     isLoading,
@@ -105,9 +108,13 @@ export default function EnrollmentsList() {
                     }}
                   >
                     {enrollment.status == "pending" ? (
-                      <Link to={`/enrollments/${enrollment.exam_id}/takequiz`}>
-                        <Button variant="outlined">Take Exam</Button>
-                      </Link>
+                      role == "student" && (
+                        <Link
+                          to={`/enrollments/${enrollment.exam_id}/takequiz`}
+                        >
+                          <Button variant="outlined">Take Exam</Button>
+                        </Link>
+                      )
                     ) : (
                       <Link
                         to={`/enrollments/${enrollment.exam_id}/your_results`}

@@ -10,23 +10,34 @@ import { Grid, Stack } from "@mui/material";
 import ModeEditOutlineOutlinedIcon from "@mui/icons-material/ModeEditOutlineOutlined";
 import MenuBookOutlinedIcon from "@mui/icons-material/MenuBookOutlined";
 import { useQuery } from "@tanstack/react-query";
-import { getCourses } from "../../services/course";
+import { filterCourses, getCourses } from "../../services/course";
 import BackdropLoader from "../ui/Backdrop";
 import NotificationSnackbars from "../ui/Snackbar";
 import Popup from "../ui/Popup";
 import CourseForm from "./CourseForm";
 import EditCourse from "./EditCourse";
+import { CurrentUserContext } from "../../App";
+import { getUsers } from "../../services/user";
 
 export default function CoursesList() {
   const [openPopup, setOpenPopup] = useState(false);
   const [course, setCourse] = useState("");
+  const currentUser = React.useContext(CurrentUserContext);
+  const role = currentUser.roles[0].role_name;
 
   const {
     isLoading,
     data: courses,
     isError,
     error,
-  } = useQuery(["courses-list"], getCourses);
+  } = useQuery(
+    ["courses-list", currentUser.id],
+    role == "admin"
+      ? getCourses
+      : () => filterCourses(`lecturer=${currentUser.id}`)
+  );
+
+  const { data: users } = useQuery(["users-list"], getUsers);
 
   const handleEditClicked = (course) => {
     setOpenPopup(true);
@@ -120,7 +131,11 @@ export default function CoursesList() {
             course={course}
           />
         ) : (
-          <CourseForm openPopup={openPopup} setOpenPopup={setOpenPopup} />
+          <CourseForm
+            users={users}
+            openPopup={openPopup}
+            setOpenPopup={setOpenPopup}
+          />
         )}
       </Popup>
     </>

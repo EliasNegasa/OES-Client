@@ -31,9 +31,8 @@ export default function ResultList() {
     error,
   } = useQuery(
     ["results-list", currentUser.id],
-    role == "admin"
-      ? getResults
-      : () => filterResults(`enrollment_id=${currentUser.id}`),
+    role == "admin" ? getResults : getResults,
+    // : () => filterResults(`enrollment_id=${currentUser.id}`),
     {
       enabled: true,
     }
@@ -83,8 +82,8 @@ export default function ResultList() {
                   sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                 >
                   <TableCell component="th" scope="row">
-                    {result.enrollment.user.firstname}{" "}
-                    {result.enrollment.user.lastname}
+                    {result.enrollment?.user.firstname}{" "}
+                    {result.enrollment?.user.lastname}
                   </TableCell>
                   <TableCell component="th" scope="row">
                     {result.exam.exam_name}

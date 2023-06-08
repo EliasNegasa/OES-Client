@@ -12,14 +12,16 @@ import BackdropLoader from "../ui/Backdrop";
 import NotificationSnackbars from "../ui/Snackbar";
 import { saveCourse } from "../../services/course";
 import CourseSchema from "../../validations/course";
+import FormSelect from "../ui/FormSelect";
 
-export default function CourseForm({ setOpenPopup }) {
+export default function CourseForm({ users, setOpenPopup }) {
   const { control, handleSubmit, reset, formState } = useForm({
     defaultValues: {
       course_name: "",
       course_year: "",
       course_code: "",
       status: "active",
+      lecturer: "",
     },
     resolver: yupResolver(CourseSchema()),
   });
@@ -90,6 +92,23 @@ export default function CourseForm({ setOpenPopup }) {
               control={control}
               label="Course Code"
               errors={errors}
+            />
+          </Stack>
+          <Stack direction="row">
+            <FormSelect
+              name="lecturer"
+              control={control}
+              label="Assign Lecturer"
+              options={
+                users &&
+                users?.data.map((user) =>
+                  user.roles[0].role_name === "lecturer"
+                    ? [user.id, `${user.firstname} ${user.lastname}`]
+                    : []
+                )
+              }
+              errors={errors}
+              minWidth={320}
             />
           </Stack>
           <Divider sx={{ marginTop: "10px", marginBottom: "10px" }} />
