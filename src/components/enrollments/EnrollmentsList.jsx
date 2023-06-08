@@ -13,6 +13,11 @@ import { useQuery } from "@tanstack/react-query";
 import { getEnrollments } from "../../services/enrollment";
 import { Link } from "react-router-dom";
 import Chip from "@mui/material/Chip";
+import CreateEnrollment from "./CreateEnrollment";
+import Popup from "../ui/Popup";
+import { getExams } from "../../services/exam";
+import { getCourses } from "../../services/course";
+import { getUsers } from "../../services/user";
 
 export default function EnrollmentsList() {
   const [openPopup, setOpenPopup] = useState(false);
@@ -24,6 +29,10 @@ export default function EnrollmentsList() {
     isError,
     error,
   } = useQuery(["enrollments-list"], getEnrollments);
+
+  const { data: exams } = useQuery(["exams-list"], getExams);
+  const { data: courses } = useQuery(["courses-list"], getCourses);
+  const { data: users } = useQuery(["users-list"], getUsers);
 
   const handleCreateClicked = () => {
     setEnrollment("");
@@ -112,6 +121,32 @@ export default function EnrollmentsList() {
             </Grid>
           ))}
       </Grid>
+      <Popup
+        openPopup={openPopup}
+        setOpenPopup={setOpenPopup}
+        title={
+          enrollment
+            ? "Update Enrollment Information"
+            : "Enter Enrollment Information"
+        }
+      >
+        {enrollment ? (
+          <></>
+        ) : (
+          // <EditExam
+          //   openPopup={openPopup}
+          //   setOpenPopup={setOpenPopup}
+          //   enrollment={enrollment}
+          // />
+          <CreateEnrollment
+            openPopup={openPopup}
+            setOpenPopup={setOpenPopup}
+            exams={exams}
+            courses={courses}
+            users={users}
+          />
+        )}
+      </Popup>
     </>
   );
 }

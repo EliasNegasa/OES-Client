@@ -25,6 +25,6 @@ export function deleteQuestion(questionId) {
   return http.delete(`${apiEndpoint}/${questionId}`);
 }
 
-// export function filterExams(query) {
-//   return http.get(`${apiEndpoint}/${query}`);
-// }
+export function filterQuestions(query) {
+  return http.get(`${apiEndpoint}/search/${query}`);
+}

@@ -49,7 +49,7 @@ const SideNav = () => {
     },
     {
       label: "Courses",
-      type: ["all"],
+      type: ["admin", "lecturer"],
       url: "/courses",
       icon: <AutoStoriesIcon />,
     },

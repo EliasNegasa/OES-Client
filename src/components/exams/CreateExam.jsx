@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { useForm } from "react-hook-form";
 import Button from "@mui/material/Button";
 import SaveOutlinedIcon from "@mui/icons-material/SaveOutlined";
@@ -10,17 +10,21 @@ import FormInput from "../ui/FormInput";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import BackdropLoader from "../ui/Backdrop";
 import NotificationSnackbars from "../ui/Snackbar";
-import { saveExam } from "../../services/exam";
+import { saveExam, updateExam } from "../../services/exam";
 import FormDate from "../ui/FormDate";
 import ExamSchema from "../../validations/exam";
+import { CurrentUserContext } from "../../App";
 
 export default function CreateExam({ setOpenPopup }) {
+  const currentUser = useContext(CurrentUserContext);
+
   const { control, handleSubmit, reset, formState } = useForm({
     defaultValues: {
       exam_name: "",
       duration_minutes: "",
       exam_start: "",
       exam_end: "",
+      lecturer: currentUser.id,
     },
     resolver: yupResolver(ExamSchema()),
   });
@@ -29,13 +33,15 @@ export default function CreateExam({ setOpenPopup }) {
 
   const queryClient = useQueryClient();
   useMutation(saveExam, {
-    onSuccess: () => {
+    onSuccess: (data) => {
       queryClient.invalidateQueries(["exams-list"]);
     },
   });
 
   const { mutate, isLoading, isError, isSuccess, error } =
     useMutation(saveExam);
+
+  const { mutate: mutateExam } = useMutation(updateExam);
 
   const onSubmit = (data) => {
     console.log("Data", data);

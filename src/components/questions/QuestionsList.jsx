@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
@@ -13,24 +13,31 @@ import NotificationSnackbars from "../ui/Snackbar";
 import { useQuery } from "@tanstack/react-query";
 import Popup from "../ui/Popup";
 import RadioButtonCheckedOutlinedIcon from "@mui/icons-material/RadioButtonCheckedOutlined";
-import { getQuestions } from "../../services/questions";
+import { filterQuestions, getQuestions } from "../../services/questions";
 import CreateQuestion from "./CreateQuestion";
 import EditQuestion from "./EditForm";
 import AssignExam from "./AssignExam";
 import { getExams } from "../../services/exam";
+import { CurrentUserContext } from "../../App";
 
 const QuestionsList = () => {
   const [openPopup, setOpenPopup] = useState(false);
   const [question, setQuestion] = useState("");
   const [questionId, setQuestionId] = useState(null);
   const [assignExam, setAssignExam] = useState(false);
+  const currentUser = useContext(CurrentUserContext);
+  const role = currentUser.roles[0].role_name;
 
   const {
     isLoading,
     data: questions,
     isError,
     error,
-  } = useQuery(["questions-list"], getQuestions);
+  } = useQuery(
+    ["questions-list", currentUser.id],
+    getQuestions
+    // : () => filterQuestions(`exam.lecturer=${currentUser.id}`)
+  );
 
   const { data: exams } = useQuery(["exams-list"], getExams);
 

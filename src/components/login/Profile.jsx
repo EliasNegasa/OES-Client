@@ -1,11 +1,13 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Stack, Avatar, Typography } from "@mui/material";
 import Popper from "@mui/material/Popper";
 import auth from "../../services/auth";
 import Box from "@mui/material/Box";
+import { CurrentUserContext } from "../../App";
 
-const Profile = ({ user }) => {
+const Profile = () => {
   const [anchorEl, setAnchorEl] = React.useState(null);
+  const currentUser = useContext(CurrentUserContext);
 
   const handleClick = (event) => {
     setAnchorEl(anchorEl ? null : event.currentTarget);
@@ -26,7 +28,7 @@ const Profile = ({ user }) => {
         <div>
           <div onClick={handleClick}>
             <Stack direction="row" spacing={2}>
-              <Avatar alt="ENs" src="/" />
+              <Avatar alt={currentUser.firstname} src="/" />
             </Stack>
           </div>
           <Popper id={id} open={open} anchorEl={anchorEl}>

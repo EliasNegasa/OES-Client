@@ -19,6 +19,7 @@ export default function CourseForm({ setOpenPopup }) {
       course_name: "",
       course_year: "",
       course_code: "",
+      status: "active",
     },
     resolver: yupResolver(CourseSchema()),
   });

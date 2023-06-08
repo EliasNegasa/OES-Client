@@ -7,8 +7,6 @@ import CardMedia from "@mui/material/CardMedia";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import { Grid, Stack } from "@mui/material";
-import ModeEditOutlineOutlinedIcon from "@mui/icons-material/ModeEditOutlineOutlined";
-import MenuBookOutlinedIcon from "@mui/icons-material/MenuBookOutlined";
 import { useQuery } from "@tanstack/react-query";
 import BackdropLoader from "../../ui/Backdrop";
 import NotificationSnackbars from "../../ui/Snackbar";
@@ -24,6 +22,12 @@ export default function MyCourses({ userId }) {
     isError,
     error,
   } = useQuery(["user-courses-list", userId], () => getUser(userId));
+
+  // const { mutateEnrollment } = useMutation(saveEnrollment);
+
+  // const handleEnrollClicked = () => {
+  //   mutateEnrollment({});
+  // };
 
   return (
     <>
@@ -67,9 +71,11 @@ export default function MyCourses({ userId }) {
                   </Typography>
                 </CardContent>
                 <Stack direction="row" sx={{ justifyContent: "space-between" }}>
-                  <CardActions>
-                    <Button size="small">Show Exams</Button>
-                  </CardActions>
+                  {/* <CardActions>
+                    <Button onClick={() => handleEnrollClicked(course.id, user.id, )} size="small">
+                      Enroll
+                    </Button>
+                  </CardActions> */}
                 </Stack>
               </Card>
             </Grid>

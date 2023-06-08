@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
@@ -10,7 +10,7 @@ import { Grid, Stack } from "@mui/material";
 import StickyNote2OutlinedIcon from "@mui/icons-material/StickyNote2Outlined";
 import ModeEditOutlineOutlinedIcon from "@mui/icons-material/ModeEditOutlineOutlined";
 import ParseDate from "../../utils/parseDate";
-import { getExams } from "../../services/exam";
+import { filterExams, getExams } from "../../services/exam";
 import BackdropLoader from "../ui/Backdrop";
 import NotificationSnackbars from "../ui/Snackbar";
 import { useQuery } from "@tanstack/react-query";
@@ -18,17 +18,23 @@ import Popup from "../ui/Popup";
 import CreateExam from "./CreateExam";
 import EditExam from "./EditExam";
 import QuizOutlinedIcon from "@mui/icons-material/QuizOutlined";
+import { CurrentUserContext } from "../../App";
 
 export default function ExamsList() {
   const [openPopup, setOpenPopup] = useState(false);
   const [exam, setExam] = useState("");
+  const currentUser = useContext(CurrentUserContext);
+  const role = currentUser.roles[0].role_name;
 
   const {
     isLoading,
     data: exams,
     isError,
     error,
-  } = useQuery(["exams-list"], getExams);
+  } = useQuery(
+    ["exams-list", currentUser.id],
+    role == "admin" ? getExams : () => filterExams(`lecturer=${currentUser.id}`)
+  );
 
   const handleEditClicked = (exam) => {
     setOpenPopup(true);
