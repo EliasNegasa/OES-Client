@@ -85,13 +85,22 @@ const QuizLoader = ({ questions, exam }) => {
         correctUserAnswer = _.concat(correctUserAnswer, question.id);
       }
     });
+    console.log("QUIZ", {
+      score: score,
+      exam_id: exam.id,
+      enrollment_id: exam.enrollment_id,
+      status: amount,
+    });
     mutate({
       score: score,
       exam_id: exam.id,
       enrollment_id: exam.enrollment_id,
       status: amount,
     });
-
+    console.log("UPDATE STATUS", {
+      id: exam.enrollment_id,
+      status: "taken",
+    });
     mutateEnrollment({
       id: exam.enrollment_id,
       status: "taken",
@@ -103,6 +112,7 @@ const QuizLoader = ({ questions, exam }) => {
 
   return (
     <>
+      {console.log("QUIZ EXAM", exam)}
       {isLoading && <BackdropLoader />}
 
       {isError && (

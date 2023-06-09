@@ -12,15 +12,12 @@ import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import PrintOutlinedIcon from "@mui/icons-material/PrintOutlined";
 import _ from "lodash";
 import { useQuery } from "@tanstack/react-query";
-import BackdropLoader from "../ui/Backdrop";
-import NotificationSnackbars from "../ui/Snackbar";
-import Popup from "../ui/Popup";
-import { filterResults, getResults } from "../../services/results";
-import EditResult from "./EditResult";
-import { CurrentUserContext } from "../../App";
-import Example from "../../utils/Print2";
+import BackdropLoader from "../../ui/Backdrop";
+import NotificationSnackbars from "../../ui/Snackbar";
+import { filterResults, getResults } from "../../../services/results";
+import { CurrentUserContext } from "../../../App";
 
-export default function ResultList() {
+export default function MyResults() {
   const currentUser = useContext(CurrentUserContext);
   const [openPopup, setOpenPopup] = useState(false);
   const [result, setResult] = useState("");
@@ -52,11 +49,9 @@ export default function ResultList() {
 
   return (
     <>
-      <Example />
-
       <Stack spacing={2} direction="row" sx={{ mb: 2 }}>
         <Typography variant="h5" sx={{ fontWeight: 700, flexGrow: 1 }}>
-          Results
+          My Results
         </Typography>
       </Stack>
       <>{isLoading && <BackdropLoader />}</>
@@ -65,7 +60,7 @@ export default function ResultList() {
           <NotificationSnackbars message={error?.message} severity="error" />
         )}
       </>
-      <TableContainer component={Paper}>
+      {/* <TableContainer component={Paper}>
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
           <TableHead sx={{ "*": { fontWeight: 700 } }}>
             <TableRow>
@@ -143,19 +138,7 @@ export default function ResultList() {
               ))}
           </TableBody>
         </Table>
-      </TableContainer>
-
-      <Popup
-        openPopup={openPopup}
-        setOpenPopup={setOpenPopup}
-        title="Update Result Information"
-      >
-        <EditResult
-          result={result}
-          openPopup={openPopup}
-          setOpenPopup={setOpenPopup}
-        />
-      </Popup>
+      </TableContainer> */}
     </>
   );
 }

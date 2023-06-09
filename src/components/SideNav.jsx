@@ -102,6 +102,12 @@ const SideNav = () => {
       icon: <CreditScoreOutlinedIcon />,
     },
     {
+      label: "My Results",
+      type: ["student"],
+      url: `/me/results/${userId}`,
+      icon: <CreditScoreOutlinedIcon />,
+    },
+    {
       label: "Monitor-Live",
       type: ["admin"],
       url: "/monitor-live",

@@ -12,6 +12,7 @@ import { saveEnrollment } from "../../services/enrollment";
 import { updateUser } from "../../services/user";
 import EnrollmentSchema from "../../validations/enrollment";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { updateExam } from "../../services/exam";
 
 export default function CreateEnrollment({
   setOpenPopup,
@@ -36,6 +37,7 @@ export default function CreateEnrollment({
     useMutation(saveEnrollment);
 
   const { mutate: mutateUser } = useMutation(updateUser);
+  const { mutate: mutateExam } = useMutation(updateExam);
 
   const onSubmit = (data) => {
     console.log("Data Enrollment", data);
@@ -48,7 +50,14 @@ export default function CreateEnrollment({
       ],
     });
     mutate(data, {
-      onSuccess: () => {
+      onSuccess: (data) => {
+        console.log("ENROLL DATA", data.data);
+        mutateExam({
+          id: data?.data.exam_id,
+          enrollment_id: data?.data.id,
+          course_id: data?.data.course_id,
+          status: "pending",
+        });
         setOpenPopup(false);
       },
     });
