@@ -18,11 +18,12 @@ import Popup from "../ui/Popup";
 import { filterResults, getResults } from "../../services/results";
 import EditResult from "./EditResult";
 import { CurrentUserContext } from "../../App";
-import Example from "../../utils/Print2";
+import { Link } from "react-router-dom";
 
 export default function ResultList() {
   const currentUser = useContext(CurrentUserContext);
   const [openPopup, setOpenPopup] = useState(false);
+  const [printClicked, setPrintClicked] = useState(false);
   const [result, setResult] = useState("");
   const role = currentUser.roles[0].role_name;
 
@@ -48,12 +49,11 @@ export default function ResultList() {
 
   const handlePrintClicked = (result) => {
     console.log("Print Clicked", result);
+    setPrintClicked(true);
   };
 
   return (
     <>
-      <Example />
-
       <Stack spacing={2} direction="row" sx={{ mb: 2 }}>
         <Typography variant="h5" sx={{ fontWeight: 700, flexGrow: 1 }}>
           Results
@@ -127,16 +127,17 @@ export default function ResultList() {
                           sx={{ fontSize: "1rem" }}
                         />
                       </Button>
-                      <Button
-                        onClick={() => handlePrintClicked(result)}
-                        variant="secondary"
-                        sx={{ minWidth: "10px" }}
+                      <Link
+                        to={`/results/print/${result?.id}`}
+                        // to={`/results/print/${result?.enrollment?.user_id}`}
                       >
-                        <PrintOutlinedIcon
-                          color="warning"
-                          sx={{ fontSize: "1rem" }}
-                        />
-                      </Button>
+                        <Button variant="secondary" sx={{ minWidth: "10px" }}>
+                          <PrintOutlinedIcon
+                            color="warning"
+                            sx={{ fontSize: "1rem" }}
+                          />
+                        </Button>
+                      </Link>
                     </Stack>
                   </TableCell>
                 </TableRow>
@@ -144,7 +145,6 @@ export default function ResultList() {
           </TableBody>
         </Table>
       </TableContainer>
-
       <Popup
         openPopup={openPopup}
         setOpenPopup={setOpenPopup}

@@ -20,6 +20,7 @@ import MyCourses from "../courses/me/MyCourses";
 import MyExams from "../exams/me/MyExams";
 import MyEnrollments from "../enrollments/me/MyEnrollments";
 import MyResults from "../results/me/MyResults";
+import PrintReport from "../results/me/PrintReport";
 
 const Router = () => {
   const currentUser = useContext(CurrentUserContext);
@@ -62,7 +63,9 @@ const Router = () => {
         />
         <Route path="/results" element={<ResultsList />} />
         <Route path="/me/results" element={<ResultsList />} />
+        <Route path={`/results/print/:reportId`} element={<PrintReport />} />
         <Route path={`/me/results/${userId}`} element={<MyResults />} />
+
         <Route path="/monitor-live" element={<VideoStreaming />} />
       </Route>
     </Routes>
