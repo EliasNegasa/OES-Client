@@ -27,6 +27,7 @@ import { updateEnrollment } from "../../services/enrollment";
 import { useContext } from "react";
 import { CurrentUserContext } from "../../App";
 import QuizResult from "./QuizResult";
+import VideoStreaming from "../video/VideoStream";
 
 const QuizLoader = ({ questions, exam }) => {
   const [openPopup, setOpenPopup] = useState(true);
@@ -127,7 +128,7 @@ const QuizLoader = ({ questions, exam }) => {
       {exam && startTimer && !isSuccess && (
         <Timer duration={exam.duration_minutes} />
       )}
-
+      <VideoStreaming />
       <form onSubmit={handleSubmit(onSubmit)}>
         {questions?.map((question) => (
           <Grid

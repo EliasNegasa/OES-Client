@@ -7,7 +7,6 @@ import QuestionsList from "../questions/QuestionsList";
 import ExamsList from "../exams/ExamsList";
 import AnswersList from "../answers/AnswersList";
 import ResultsList from "../results/ResultsList";
-import Dashboard from "../dashboard.jsx/dashboard";
 import UserDetails from "../users/UserDetails";
 import EnrollmentsList from "../enrollments/EnrollmentsList";
 import SingleExam from "../exams/SingleExam";
@@ -21,6 +20,7 @@ import MyExams from "../exams/me/MyExams";
 import MyEnrollments from "../enrollments/me/MyEnrollments";
 import MyResults from "../results/me/MyResults";
 import PrintReport from "../results/me/PrintReport";
+import Dashboard from "../dashboard/Dashboard";
 
 const Router = () => {
   const currentUser = useContext(CurrentUserContext);

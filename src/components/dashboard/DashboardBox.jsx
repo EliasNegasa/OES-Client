@@ -1,6 +1,5 @@
 import React from "react";
 import { StyledDashboardCard, StyledFlex } from "../ui/styledDashBoard";
-import BackdropLoader from "../ui/Backdrop";
 
 const DashboardBox = ({ label, value, icon, ...rest }) => {
   return (

@@ -6,10 +6,10 @@ import NotificationSnackbars from "./Snackbar";
 
 const Timer = memo(({ duration, start }) => {
   const renderer = ({ hours, minutes, seconds, completed }) => {
-    if (minutes == 29 && seconds == 45) {
+    if (minutes == 2 && seconds < 59) {
       return (
         <NotificationSnackbars
-          message={`You only have ${minutes}`}
+          message={`You only have ${minutes} minutes`}
           severity="warning"
           anchorOrigin={{ vertical: "top", horizontal: "right" }}
         />
@@ -18,7 +18,7 @@ const Timer = memo(({ duration, start }) => {
 
     if (completed) {
       return <></>;
-      //   return <Completionist />;
+      // return <Completionist />;
     } else {
       return (
         <>

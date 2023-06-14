@@ -5,8 +5,20 @@ import SpeakerNotesOutlinedIcon from "@mui/icons-material/SpeakerNotesOutlined";
 import SupervisedUserCircleOutlinedIcon from "@mui/icons-material/SupervisedUserCircleOutlined";
 import Typography from "@mui/material/Typography";
 import { Stack } from "@mui/material";
+import { getCourses } from "../../services/course";
+import { getUsers } from "../../services/user";
+import { getExams } from "../../services/exam";
+import { getQuestions } from "../../services/questions";
+import { useQuery } from "@tanstack/react-query";
+import ChartPie from "./ChartPie";
+import ChartLine from "./ChartLine";
 
 const DashBoard = () => {
+  const { data: users } = useQuery(["users-list"], getUsers);
+  const { data: courses } = useQuery(["courses-list"], getCourses);
+  const { data: exams } = useQuery(["exams-list"], getExams);
+  const { data: questions } = useQuery(["questions-list"], getQuestions);
+
   return (
     <>
       <Stack spacing={2} direction="column" sx={{ mb: 2 }}>
@@ -16,30 +28,34 @@ const DashBoard = () => {
         <StyledFlex>
           <DashboardBox
             blue
-            label="Courses"
-            value="20+"
+            label="Users"
+            value={users?.data.length || 0}
             icon={<PeopleAltOutlinedIcon />}
           />
           <DashboardBox
             black
-            label="Reports"
-            value="Repo"
+            label="Courses"
+            value={courses?.data.length || 0}
             icon={<SpeakerNotesOutlinedIcon />}
           />
           <DashboardBox
             blue
             label="Exams"
-            value="100"
+            value={exams?.data.length || 0}
             icon={<PeopleAltOutlinedIcon />}
           />
           <DashboardBox
             black
-            label="Active Users"
-            value="10+"
+            label="Questions"
+            value={questions?.data.length || 0}
             icon={<SupervisedUserCircleOutlinedIcon />}
           />
         </StyledFlex>
       </Stack>
+      {/* <Stack direction="row" spacing={2}>
+        <ChartPie users={users} />
+        <ChartLine />
+      </Stack> */}
     </>
   );
 };
