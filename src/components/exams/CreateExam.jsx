@@ -13,8 +13,9 @@ import { saveExam, updateExam } from "../../services/exam";
 import FormDate from "../ui/FormDate";
 import ExamSchema from "../../validations/exam";
 import { CurrentUserContext } from "../../App";
+import FormSelect from "../ui/FormSelect";
 
-export default function CreateExam({ setOpenPopup }) {
+export default function CreateExam({ users, setOpenPopup }) {
   const currentUser = useContext(CurrentUserContext);
 
   const { control, handleSubmit, reset, formState } = useForm({
@@ -23,7 +24,7 @@ export default function CreateExam({ setOpenPopup }) {
       duration_minutes: "",
       exam_start: "",
       exam_end: "",
-      lecturer: currentUser.id,
+      lecturer: "",
     },
     resolver: yupResolver(ExamSchema()),
   });
@@ -105,6 +106,24 @@ export default function CreateExam({ setOpenPopup }) {
               control={control}
               label="End Date"
               errors={errors}
+            />
+          </Stack>
+
+          <Stack direction="row">
+            <FormSelect
+              name="lecturer"
+              control={control}
+              label="Assign Lecturer"
+              options={
+                users &&
+                users?.data.map((user) =>
+                  user.roles[0].role_name === "lecturer"
+                    ? [user.id, `${user.firstname} ${user.lastname}`]
+                    : []
+                )
+              }
+              errors={errors}
+              minWidth={320}
             />
           </Stack>
 

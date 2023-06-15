@@ -107,12 +107,12 @@ const SideNav = () => {
       url: `/me/results/${userId}`,
       icon: <CreditScoreOutlinedIcon />,
     },
-    {
-      label: "Monitor-Live",
-      type: ["admin"],
-      url: "/monitor-live",
-      icon: <LiveTvIcon />,
-    },
+    // {
+    //   label: "Monitor-Live",
+    //   type: ["admin"],
+    //   url: "/monitor-live",
+    //   icon: <LiveTvIcon />,
+    // },
   ];
 
   return (

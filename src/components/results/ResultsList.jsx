@@ -47,11 +47,6 @@ export default function ResultList() {
     console.log("US", result);
   };
 
-  const handlePrintClicked = (result) => {
-    console.log("Print Clicked", result);
-    setPrintClicked(true);
-  };
-
   return (
     <>
       <Stack spacing={2} direction="row" sx={{ mb: 2 }}>
@@ -127,10 +122,7 @@ export default function ResultList() {
                           sx={{ fontSize: "1rem" }}
                         />
                       </Button>
-                      <Link
-                        to={`/results/print/${result?.id}`}
-                        // to={`/results/print/${result?.enrollment?.user_id}`}
-                      >
+                      <Link to={`/results/print/${result?.id}`}>
                         <Button variant="secondary" sx={{ minWidth: "10px" }}>
                           <PrintOutlinedIcon
                             color="warning"

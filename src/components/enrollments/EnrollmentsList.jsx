@@ -19,10 +19,13 @@ import { getExams } from "../../services/exam";
 import { getCourses } from "../../services/course";
 import { getUsers } from "../../services/user";
 import { CurrentUserContext } from "../../App";
+import { filterResults } from "../../services/results";
+import QuizResult from "../quiz/QuizResult";
 
 export default function EnrollmentsList() {
   const [openPopup, setOpenPopup] = useState(false);
   const [enrollment, setEnrollment] = useState("");
+  const [resultId, setResultId] = useState(null);
   const currentUser = React.useContext(CurrentUserContext);
   const role = currentUser.roles[0].role_name;
 
@@ -37,8 +40,21 @@ export default function EnrollmentsList() {
   const { data: courses } = useQuery(["courses-list"], getCourses);
   const { data: users } = useQuery(["users-list"], getUsers);
 
+  const { data: results, refetch } = useQuery(
+    ["user-results-list", resultId],
+    () => filterResults(`enrollment_id=${resultId}`)
+  );
+
   const handleCreateClicked = () => {
     setEnrollment("");
+    setOpenPopup(true);
+  };
+
+  const handleResultClicked = (id) => {
+    setResultId(id);
+    refetch();
+    // console.log("Result Clicked", id);
+    // setResult(true);
     setOpenPopup(true);
   };
 
@@ -108,19 +124,24 @@ export default function EnrollmentsList() {
                     }}
                   >
                     {enrollment.status == "pending" ? (
-                      role == "student" && (
+                      role == "student" ? (
                         <Link
                           to={`/enrollments/${enrollment.exam_id}/takequiz`}
                         >
                           <Button variant="outlined">Take Exam</Button>
                         </Link>
+                      ) : (
+                        <Button variant="outlined" disabled>
+                          View Result
+                        </Button>
                       )
                     ) : (
-                      <Link
-                        to={`/enrollments/${enrollment.exam_id}/your_results`}
+                      <Button
+                        variant="outlined"
+                        onClick={() => handleResultClicked(enrollment.id)}
                       >
-                        <Button variant="outlined">View Result</Button>
-                      </Link>
+                        View Result
+                      </Button>
                     )}
                   </Stack>
                 </Box>
@@ -137,14 +158,16 @@ export default function EnrollmentsList() {
             : "Enter Enrollment Information"
         }
       >
-        {enrollment ? (
-          <></>
+        {resultId ? (
+          <QuizResult
+            exam_name={enrollment?.course?.course_name}
+            score={results?.data[0].score}
+            amount={results?.data[0].status}
+            openPopup={openPopup}
+            setOpenPopup={setOpenPopup}
+            status={false}
+          />
         ) : (
-          // <EditExam
-          //   openPopup={openPopup}
-          //   setOpenPopup={setOpenPopup}
-          //   enrollment={enrollment}
-          // />
           <CreateEnrollment
             openPopup={openPopup}
             setOpenPopup={setOpenPopup}

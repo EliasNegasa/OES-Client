@@ -19,6 +19,7 @@ import CreateExam from "./CreateExam";
 import EditExam from "./EditExam";
 import QuizOutlinedIcon from "@mui/icons-material/QuizOutlined";
 import { CurrentUserContext } from "../../App";
+import { getUsers } from "../../services/user";
 
 export default function ExamsList() {
   const [openPopup, setOpenPopup] = useState(false);
@@ -35,6 +36,8 @@ export default function ExamsList() {
     ["exams-list", currentUser.id],
     role == "admin" ? getExams : () => filterExams(`lecturer=${currentUser.id}`)
   );
+
+  const { data: users } = useQuery(["users-list"], getUsers);
 
   const handleEditClicked = (exam) => {
     setOpenPopup(true);
@@ -143,7 +146,11 @@ export default function ExamsList() {
             exam={exam}
           />
         ) : (
-          <CreateExam openPopup={openPopup} setOpenPopup={setOpenPopup} />
+          <CreateExam
+            users={users}
+            openPopup={openPopup}
+            setOpenPopup={setOpenPopup}
+          />
         )}
       </Popup>
     </>

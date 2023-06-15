@@ -91,7 +91,6 @@ function App() {
           )}
         </>
       </ThemeProvider>
-      <ReactQueryDevtools initialIsOpen={false} position="bottom right" />
     </>
   );
 }
