@@ -5,7 +5,6 @@ import SaveOutlinedIcon from "@mui/icons-material/SaveOutlined";
 import { Box, Divider, Stack, TextField, useRadioGroup } from "@mui/material";
 import _ from "lodash";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { DevTool } from "@hookform/devtools";
 import FormInput from "../ui/FormInput";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import BackdropLoader from "../ui/Backdrop";
@@ -116,7 +115,6 @@ export default function EditExam({ exam, setOpenPopup }) {
           </Button>
         </Box>
       </form>
-      <DevTool control={control} placement="top-left" />
     </>
   );
 }

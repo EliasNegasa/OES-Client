@@ -149,13 +149,6 @@ const QuestionsList = () => {
                       ml: "10px",
                     }}
                   >
-                    {/* <Button
-                      variant="text"
-                      // onClick={() => handleEditClicked(question)}
-                      startIcon={<ModeEditOutlineOutlinedIcon />}
-                    >
-                      Edit Answers
-                    </Button> */}
                     <Button
                       variant="text"
                       onClick={() => handleEditClicked(question)}

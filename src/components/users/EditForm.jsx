@@ -5,7 +5,6 @@ import SaveOutlinedIcon from "@mui/icons-material/SaveOutlined";
 import { Box, Divider, Stack } from "@mui/material";
 import _ from "lodash";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { DevTool } from "@hookform/devtools";
 import FormInput from "../ui/FormInput";
 import FormSelect from "../ui/FormSelect";
 import { updateUser } from "../../services/user";
@@ -130,7 +129,6 @@ export default function EditForm({ setOpenPopup, user }) {
           </Button>
         </Box>
       </form>
-      <DevTool control={control} placement="top-left" />
     </>
   );
 }

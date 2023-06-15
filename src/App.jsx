@@ -1,16 +1,11 @@
 import { createContext, useEffect, useState } from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
-import { ReactNotifications } from "react-notifications-component";
 import Router from "./components/routes/router";
-import { getUser, getUsers } from "./services/user";
-import auth, { getCurrentUser } from "./services/auth";
+import { getUser } from "./services/user";
+import auth from "./services/auth";
 import LoginForm from "./components/login/LoginForm";
-import {
-  QueryClient,
-  QueryClientProvider,
-  useQuery,
-} from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 const theme = createTheme({
@@ -61,11 +56,6 @@ function App() {
       }
       setUser(user);
     }
-    // async function fetchUser() {
-    //   const { data } = await getUsers();
-    //   setUser(data);
-    // }
-    // fetchUser();
   }, []);
 
   return (
@@ -82,7 +72,6 @@ function App() {
             <>
               {expired ? (
                 <>
-                  {console.log("EXP", expired)}
                   <Routes>
                     <Route
                       path="*"
@@ -93,7 +82,6 @@ function App() {
                 </>
               ) : (
                 <>
-                  {console.log("ROUTER", currentUser)}
                   <CurrentUserContext.Provider value={currentUser?.data}>
                     <Router />
                   </CurrentUserContext.Provider>

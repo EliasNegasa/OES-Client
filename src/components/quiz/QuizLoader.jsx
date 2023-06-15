@@ -1,24 +1,12 @@
-import React, { useState } from "react";
-import {
-  Alert,
-  Box,
-  Button,
-  Card,
-  CardActions,
-  CardContent,
-  CardHeader,
-  Container,
-  Grid,
-  Stack,
-  Typography,
-} from "@mui/material";
+import React, { useEffect, useState } from "react";
+import { Alert, Box, Button, Card, Grid, Stack } from "@mui/material";
 import { useForm } from "react-hook-form";
 import FormRadio from "../ui/FormRadio";
 import { getResults, saveResult } from "../../services/results";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import NotificationSnackbars from "../ui/Snackbar";
 import BackdropLoader from "../ui/Backdrop";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import Popup from "../ui/Popup";
 import _ from "lodash";
 import Timer from "../ui/Timer";
@@ -36,6 +24,7 @@ const QuizLoader = ({ questions, exam }) => {
   const [amount, setAmount] = useState(0);
   const [correct, setCorrect] = useState([]);
   const currentUser = useContext(CurrentUserContext);
+  const [timerIsUp, setTimerIsUp] = useState(false);
 
   const { control, handleSubmit, reset, formState } = useForm({
     defaultValues: {},
@@ -86,22 +75,14 @@ const QuizLoader = ({ questions, exam }) => {
         correctUserAnswer = _.concat(correctUserAnswer, question.id);
       }
     });
-    console.log("QUIZ", {
-      score: score,
-      exam_id: exam.id,
-      enrollment_id: exam.enrollment_id,
-      status: amount,
-    });
+
     mutate({
       score: score,
       exam_id: exam.id,
       enrollment_id: exam.enrollment_id,
       status: amount,
     });
-    console.log("UPDATE STATUS", {
-      id: exam.enrollment_id,
-      status: "taken",
-    });
+
     mutateEnrollment({
       id: exam.enrollment_id,
       status: "taken",
@@ -111,9 +92,14 @@ const QuizLoader = ({ questions, exam }) => {
     setCorrect(correctUserAnswer);
   };
 
+  useEffect(() => {
+    if (timerIsUp == true) {
+      handleSubmit(onSubmit)();
+    }
+  }, [timerIsUp]);
+
   return (
     <>
-      {console.log("QUIZ EXAM", exam)}
       {isLoading && <BackdropLoader />}
 
       {isError && (
@@ -126,7 +112,11 @@ const QuizLoader = ({ questions, exam }) => {
         />
       )}
       {exam && startTimer && !isSuccess && (
-        <Timer duration={exam.duration_minutes} />
+        <Timer
+          duration={exam.duration_minutes}
+          timerIsUp={timerIsUp}
+          setTimerIsUp={setTimerIsUp}
+        />
       )}
       <VideoStreaming />
       <form onSubmit={handleSubmit(onSubmit)}>

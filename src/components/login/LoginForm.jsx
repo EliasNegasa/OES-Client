@@ -1,12 +1,10 @@
 import React, { useState } from "react";
-import BackdropLoader from "../ui/Backdrop";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
 import FormInput from "../ui/FormInput";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
-import { DevTool } from "@hookform/devtools";
 import auth, { login } from "../../services/auth";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Avatar from "@mui/material/Avatar";
@@ -14,9 +12,6 @@ import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import Box from "@mui/material/Box";
 import { Alert } from "@mui/material";
-import useSWR from "swr";
-import { useMutation } from "@tanstack/react-query";
-import { Navigate } from "react-router-dom";
 
 const schema = yup.object({
   password: yup.string().required("Password is required"),

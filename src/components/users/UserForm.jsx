@@ -5,7 +5,6 @@ import SaveOutlinedIcon from "@mui/icons-material/SaveOutlined";
 import { Box, Divider, Stack } from "@mui/material";
 import _ from "lodash";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { DevTool } from "@hookform/devtools";
 import FormInput from "../ui/FormInput";
 import FormSelect from "../ui/FormSelect";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -136,39 +135,6 @@ export default function UserForm({ setOpenPopup }) {
           </Button>
         </Box>
       </form>
-      <DevTool control={control} placement="top-left" />
     </>
   );
-}
-
-{
-  /* <Stack direction="column">
-              <Controller
-                name="email"
-                control={control}
-                rules={{
-                  validate: {
-                    EmailAvailable: (fieldValue) => {
-                      const index = _.findIndex(users, (o) => {
-                        return o.email == fieldValue;
-                      });
-                      return index == -1 || "Email already exists";
-                    },
-                  },
-                }}
-                render={({ field }) => (
-                  <TextField
-                    id="email"
-                    label="Email Address"
-                    {...field}
-                    variant="outlined"
-                  />
-                )}
-              />
-              {errors.email && (
-                <Alert severity="error" sx={{ m: 1 }}>
-                  {errors.email?.message}
-                </Alert>
-              )}
-            </Stack> */
 }
